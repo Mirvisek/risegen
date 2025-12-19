@@ -9,14 +9,14 @@ export default async function AdminFAQPage() {
     });
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Często Zadawane Pytania (FAQ)</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Często Zadawane Pytania ({faqs.length})</h1>
             </div>
 
-            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-lg text-amber-800 dark:text-amber-200 text-sm">
-                <p className="font-bold mb-1 italic text-base">Jak używać tej sekcji?</p>
-                <ul className="list-disc pl-5 space-y-1">
+            <div className="bg-white shadow sm:rounded-lg border border-gray-200 p-6">
+                <p className="font-bold text-gray-900 mb-2">Jak używać tej sekcji?</p>
+                <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600">
                     <li>Dodawaj pytania, które najczęściej zadają Wasi członkowie lub partnerzy.</li>
                     <li>Ustawiaj "Kolejność" (liczba), aby posortować pytania na stronie.</li>
                     <li>Odpowiedzi mogą być krótkie i treściwe – użytkownik zobaczy je po kliknięciu w pytanie.</li>
