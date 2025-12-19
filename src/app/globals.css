@@ -1,0 +1,100 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out forwards;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  --font-sans: var(--font-poppins);
+  font-family: var(--font-sans);
+}
+
+/* WCAG Accessibilty Styles */
+
+/* Font Size Scaling */
+html.wcag-text-large {
+  font-size: 110%;
+}
+
+html.wcag-text-xlarge {
+  font-size: 125%;
+}
+
+/* High Contrast Mode */
+html.wcag-contrast-high body,
+html.wcag-contrast-high main,
+html.wcag-contrast-high header,
+html.wcag-contrast-high footer,
+html.wcag-contrast-high div,
+html.wcag-contrast-high section,
+html.wcag-contrast-high article,
+html.wcag-contrast-high nav {
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+
+/* Override specifics for High Contrast */
+html.wcag-contrast-high a,
+html.wcag-contrast-high button,
+html.wcag-contrast-high h1,
+html.wcag-contrast-high h2,
+html.wcag-contrast-high h3,
+html.wcag-contrast-high h4,
+html.wcag-contrast-high h5,
+html.wcag-contrast-high h6,
+html.wcag-contrast-high p,
+html.wcag-contrast-high span,
+html.wcag-contrast-high li {
+  color: #ffff00 !important;
+  background-color: #000000 !important;
+}
+
+html.wcag-contrast-high .bg-indigo-600,
+html.wcag-contrast-high .bg-white,
+html.wcag-contrast-high .bg-gray-50,
+html.wcag-contrast-high .bg-gray-100 {
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+  border: 1px solid #ffff00 !important;
+}
+
+html.wcag-contrast-high img {
+  filter: grayscale(100%) contrast(150%);
+}
+
+/* WCAG Link Underlines */
+html.wcag-links-underline a {
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+}

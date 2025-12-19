@@ -1,0 +1,145 @@
+import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
+import "./globals.css";
+import { Navbar } from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import { HideInAdmin } from "@/components/layout/HideInAdmin";
+import { WcagWidget } from "@/components/layout/WcagWidget";
+import { ScrollToTop } from "@/components/layout/ScrollToTop";
+import { SkipToContent } from "@/components/layout/SkipToContent";
+
+import { prisma } from "@/lib/prisma";
+
+const poppins = Poppins({
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-poppins",
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
+
+  const title = config?.seoTitle || config?.siteName || "RiseGen";
+  const description = config?.seoDescription || "Stowarzyszenie RiseGen";
+  // const icons = config?.faviconUrl ? { icon: config.faviconUrl } : undefined; // This line is no longer needed
+
+  const openGraph = config?.ogImageUrl ? {
+    images: [{ url: config.ogImageUrl }],
+  } : undefined;
+
+  const timestamp = new Date().getTime();
+  const faviconUrl = config?.faviconUrl
+    ? `${config.faviconUrl}?v=${timestamp}`
+    : `/favicon.ico?v=${timestamp}`;
+
+  return {
+    metadataBase: new URL('https://risegen.pl'), // Fixes relative URL issues
+    title: {
+      default: title,
+      template: `%s | ${config?.siteName || "RiseGen"}`,
+    },
+    description,
+    keywords: config?.seoKeywords ? config.seoKeywords.split(",").map(k => k.trim()) : undefined,
+    authors: config?.seoAuthor ? [{ name: config.seoAuthor }] : undefined,
+    robots: config?.seoRobots || "index, follow",
+    icons: {
+      icon: faviconUrl,
+      shortcut: faviconUrl,
+      apple: faviconUrl,
+    },
+    manifest: '/manifest.json',
+    openGraph: {
+      ...openGraph,
+      title,
+      description,
+      siteName: config?.siteName || "Rise Gen",
+      type: 'website',
+      locale: 'pl_PL',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: config?.ogImageUrl ? [config.ogImageUrl] : undefined,
+    },
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: 'default',
+      title: config?.siteName || "RiseGen",
+    },
+  };
+}
+
+export function generateViewport() {
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  };
+}
+
+import { Toaster } from "sonner";
+import { CookieBanner } from "@/components/layout/CookieBanner";
+import { GoogleAnalytics } from "@/components/providers/GoogleAnalytics";
+
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
+
+  return (
+    <html lang="pl">
+      <head></head>
+      <body
+        className={`${poppins.variable} font-sans antialiased min-h-screen flex flex-col bg-white text-gray-900`}
+      >
+        <SkipToContent />
+
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": config?.siteName || "RiseGen",
+              "url": "https://risegen.pl",
+              "logo": config?.logoUrl ? `https://risegen.pl${config.logoUrl}` : "https://risegen.pl/logo.png",
+              "description": config?.seoDescription || "Stowarzyszenie RiseGen - Wspieramy rozwój i innowacje",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": config?.orgAddress || "",
+                "addressCountry": "PL"
+              },
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": config?.phone,
+                "contactType": "customer service"
+              },
+              "sameAs": [
+                config?.facebookUrl,
+                config?.instagramUrl,
+                config?.tiktokUrl
+              ].filter(Boolean)
+            })
+          }}
+        />
+
+        <GoogleAnalytics gaId={config?.googleAnalyticsId} />
+        <Toaster position="top-center" richColors />
+        <Navbar config={config} />
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
+        <HideInAdmin>
+          <Footer config={config} />
+          <WcagWidget />
+          <CookieBanner />
+          <ScrollToTop />
+        </HideInAdmin>
+      </body>
+    </html>
+  );
+}

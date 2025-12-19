@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://risegen.pl
+
+# Sitemaps
+Sitemap: https://risegen.pl/sitemap.xml
