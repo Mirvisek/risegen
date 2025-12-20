@@ -90,10 +90,6 @@ export default async function MaintenancePage() {
                     </div>
                 </div>
             </main>
-
-            <footer className="mt-12 text-gray-400 text-sm relative z-10">
-                &copy; {new Date().getFullYear()} {config?.orgName || config?.siteName || "RiseGen"}. Wszystkie prawa zastrzeżone.
-            </footer>
         </div>
     );
 }

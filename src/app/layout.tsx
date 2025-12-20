@@ -93,29 +93,29 @@ export default async function RootLayout({
 }>) {
   const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
 
+  let pathname = "";
+  try {
+    const headersList = await headers();
+    pathname = headersList.get("x-pathname") || "";
+  } catch (e) { }
+
+  const isAdmin = pathname.startsWith("/admin");
+  const isAuth = pathname.startsWith("/auth");
+  const isMaintenancePage = pathname === "/maintenance" || pathname === "/maintenance/";
+  const isApi = pathname.startsWith("/api");
+
   // Maintenance Mode Logic
   if (config?.isMaintenanceMode) {
-    let pathname = "";
-    try {
-      const headersList = await headers();
-      pathname = headersList.get("x-pathname") || "";
-    } catch (e) {
-      // In some environments/build phases headers() might throw
-    }
-
-    // Allow admin pages, auth pages, and the maintenance page itself
-    const isAdmin = pathname.startsWith("/admin");
-    const isAuth = pathname.startsWith("/auth");
-    const isMaintenancePage = pathname === "/maintenance";
-    const isApi = pathname.startsWith("/api");
-
     // Only redirect if we are SURE we are not in an exempted area.
-    // If pathname is empty (e.g. admin page where middleware doesn't set it), 
-    // we DON'T redirect, which satisfies the requirement that admin stays available.
     if (pathname && !isAdmin && !isAuth && !isMaintenancePage && !isApi) {
       redirect("/maintenance");
     }
   }
+
+  // Determine if we should show the regular navigation and widgets
+  // We hide them on the dedicated maintenance page to provide a clean offline experience.
+  // We hide them even for admins ONLY on this specific page to check the offline view.
+  const showNavigation = !isMaintenancePage;
 
   return (
     <html lang="pl">
@@ -157,16 +157,18 @@ export default async function RootLayout({
 
         <GoogleAnalytics gaId={config?.googleAnalyticsId} />
         <Toaster position="top-center" richColors />
-        <Navbar config={config} />
+        {showNavigation && <Navbar config={config} />}
         <main id="main-content" className="flex-1">
           {children}
         </main>
-        <HideInAdmin>
-          <Footer config={config} />
-          <WcagWidget />
-          <CookieBanner />
-          <ScrollToTop />
-        </HideInAdmin>
+        {showNavigation && (
+          <HideInAdmin>
+            <Footer config={config} />
+            <WcagWidget />
+            <CookieBanner />
+            <ScrollToTop />
+          </HideInAdmin>
+        )}
       </body>
     </html>
   );
