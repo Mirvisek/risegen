@@ -52,7 +52,7 @@ export default async function middleware(req: NextRequest, event: any) {
         return (authMiddleware as any)(req, event);
     }
 
-    // 2. For all other pages, just pass through but add a header for current path
+    // 2. Prepare headers with x-pathname for non-admin pages
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("x-pathname", pathname);
 

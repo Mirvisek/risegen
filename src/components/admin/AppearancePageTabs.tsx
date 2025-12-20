@@ -9,7 +9,8 @@ import {
     SeoForm,
     ContactForm,
     HomepageSettingsForm,
-    MaintenanceModeForm
+    MaintenanceModeForm,
+    CalendarForm
 } from "@/components/admin/AppearanceForm";
 import { AppearanceNavigationForm } from "@/components/admin/AppearanceNavigationForm";
 import { PartnersList } from "@/components/admin/PartnersList";
@@ -193,13 +194,7 @@ export function AppearancePageTabs({ config, partners, slides, members, document
                         {activeSubTab === "config-email" && <EmailConfigForm config={config} />}
                         {activeSubTab === "config-codes" && <CodeInjectionForm config={config} />}
                         {activeSubTab === "config-calendar" && (
-                            <div className="bg-white shadow sm:rounded-lg p-6 space-y-6">
-                                <h3 className="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Kalendarz</h3>
-                                <div className="space-y-4">
-                                    <p className="text-sm text-gray-500">Zarządzaj identyfikatorem kalendarza Google wyświetlanego na stronie.</p>
-                                    <SeoForm config={config} /> {/* This covers calendar id, though split might be better later */}
-                                </div>
-                            </div>
+                            <CalendarForm config={config} />
                         )}
                         {activeSubTab === "config-maintenance" && <MaintenanceModeForm config={config} />}
                     </div>

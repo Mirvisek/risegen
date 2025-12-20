@@ -84,6 +84,8 @@ import { GoogleAnalytics } from "@/components/providers/GoogleAnalytics";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+export const dynamic = 'force-dynamic';
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -93,8 +95,13 @@ export default async function RootLayout({
 
   // Maintenance Mode Logic
   if (config?.isMaintenanceMode) {
-    const headersList = headers();
-    const pathname = (await headersList).get("x-pathname") || "";
+    let pathname = "";
+    try {
+      const headersList = await headers();
+      pathname = headersList.get("x-pathname") || "";
+    } catch (e) {
+      // In some environments/build phases headers() might throw
+    }
 
     // Allow admin pages, auth pages, and the maintenance page itself
     const isAdmin = pathname.startsWith("/admin");
@@ -102,7 +109,10 @@ export default async function RootLayout({
     const isMaintenancePage = pathname === "/maintenance";
     const isApi = pathname.startsWith("/api");
 
-    if (!isAdmin && !isAuth && !isMaintenancePage && !isApi) {
+    // Only redirect if we are SURE we are not in an exempted area.
+    // If pathname is empty (e.g. admin page where middleware doesn't set it), 
+    // we DON'T redirect, which satisfies the requirement that admin stays available.
+    if (pathname && !isAdmin && !isAuth && !isMaintenancePage && !isApi) {
       redirect("/maintenance");
     }
   }
