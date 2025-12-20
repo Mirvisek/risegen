@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useActionState } from "react";
-import { updateCompanyData, updateSocialMedia, updateContactData, updateHomepageSettings, updateBranding, updateSeoConfig } from "@/app/admin/wyglad/actions";
+import { updateCompanyData, updateSocialMedia, updateContactData, updateHomepageSettings, updateBranding, updateSeoConfig, updateMaintenanceMode } from "@/app/admin/wyglad/actions";
 import { AppearanceNavigationForm } from "./AppearanceNavigationForm"; // Added import
 import { FooterDocumentsForm } from "./FooterDocumentsForm";
 import { Loader2, Check, Upload } from "lucide-react";
@@ -38,6 +38,8 @@ interface Props {
         showEvents?: boolean;
         showStats?: boolean;
         googleCalendarId?: string | null;
+        isMaintenanceMode?: boolean;
+        maintenanceMessage?: string | null;
     } | null;
 }
 
@@ -554,9 +556,74 @@ function HomepageSettingsForm({ config }: Props) {
     );
 }
 
+function MaintenanceModeForm({ config }: Props) {
+    const [state, formAction, isPending] = useActionState(updateMaintenanceMode, initialState);
+
+    return (
+        <form action={formAction} className="bg-white shadow sm:rounded-lg p-6 space-y-6 border-2 border-amber-100">
+            <div className="flex items-center gap-3 border-b pb-2">
+                <h3 className="text-lg font-medium leading-6 text-gray-900">Tryb Przebudowy / Prace Serwisowe</h3>
+                {config?.isMaintenanceMode && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 animate-pulse">
+                        Aktywny
+                    </span>
+                )}
+            </div>
+            <FormFeedback state={state} />
+
+            <div className="space-y-4">
+                <div className="flex items-start justify-between gap-4">
+                    <div className="max-w-xl">
+                        <label htmlFor="isMaintenanceMode" className="font-medium text-gray-700">Włącz tryb serwisowy</label>
+                        <p className="text-sm text-gray-500">
+                            Po włączeniu, strona będzie niedostępna dla odwiedzających. Wyświetlona zostanie informacja o trwających pracach.
+                            <span className="text-amber-600 font-medium ml-1">Panel admina pozostanie dostępny.</span>
+                        </p>
+                    </div>
+                    <div className="flex items-center h-5">
+                        <input
+                            id="isMaintenanceMode"
+                            name="isMaintenanceMode"
+                            type="checkbox"
+                            defaultChecked={config?.isMaintenanceMode ?? false}
+                            className="focus:ring-amber-500 h-6 w-6 text-amber-600 border-gray-300 rounded cursor-pointer"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <label htmlFor="maintenanceMessage" className="block text-sm font-medium text-gray-700 mb-1">
+                        Wiadomość dla odwiedzających (opcjonalnie)
+                    </label>
+                    <textarea
+                        name="maintenanceMessage"
+                        id="maintenanceMessage"
+                        rows={3}
+                        defaultValue={config?.maintenanceMessage || "Przepraszamy, strona jest obecnie w trakcie prac serwisowych. Zapraszamy wkrótce!"}
+                        placeholder="np. Trwa aktualizacja systemu. Wrócimy o 14:00."
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm p-2 border"
+                    />
+                </div>
+            </div>
+
+            <div className="pt-4 flex justify-end">
+                <button
+                    type="submit"
+                    disabled={isPending}
+                    className="inline-flex justify-center items-center gap-2 rounded-md border border-transparent bg-amber-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50"
+                >
+                    {isPending && <Loader2 className="animate-spin h-4 w-4" />}
+                    {isPending ? "Zapisywanie..." : "Zapisz ustawienia trybu"}
+                </button>
+            </div>
+        </form>
+    );
+}
+
 export function AppearanceForm({ config }: Props) {
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
+            <MaintenanceModeForm config={config} />
             <HomepageSettingsForm config={config} />
             <AppearanceNavigationForm config={config} />
             <BrandingForm config={config} />

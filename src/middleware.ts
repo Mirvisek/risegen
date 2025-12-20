@@ -1,8 +1,10 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export default withAuth(
-    function middleware(req) {
+// Auth middleware function
+const authMiddleware = withAuth(
+    function middleware(req: any) {
         const token = req.nextauth.token;
         const isAuth = !!token;
         const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
@@ -24,17 +26,16 @@ export default withAuth(
 
         // Access control
         if (isAdminPage && !isChangePasswordPage) {
-            const roles = (token?.roles as string[]) || []; // Safely cast roles
+            const roles = (token?.roles as string[]) || [];
 
-            // Check if user has at least one required role
             const hasAccess = roles.includes("ADMIN") || roles.includes("EDITOR") || roles.includes("SUPERADMIN");
 
             if (!hasAccess) {
-                // If user doesn't have required role, redirect to home or login
-                // Returning 403 or redirecting to home is better than login loop
                 return NextResponse.redirect(new URL("/", req.url));
             }
         }
+
+        return NextResponse.next();
     },
     {
         callbacks: {
@@ -43,6 +44,25 @@ export default withAuth(
     }
 );
 
+export default async function middleware(req: NextRequest, event: any) {
+    const pathname = req.nextUrl.pathname;
+
+    // 1. Handle Admin & Auth pages
+    if (pathname.startsWith("/admin") || pathname.startsWith("/auth")) {
+        return (authMiddleware as any)(req, event);
+    }
+
+    // 2. For all other pages, just pass through but add a header for current path
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set("x-pathname", pathname);
+
+    return NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    });
+}
+
 export const config = {
-    matcher: ["/admin/:path*"],
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

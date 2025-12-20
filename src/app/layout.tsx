@@ -81,6 +81,8 @@ export function generateViewport() {
 import { Toaster } from "sonner";
 import { CookieBanner } from "@/components/layout/CookieBanner";
 import { GoogleAnalytics } from "@/components/providers/GoogleAnalytics";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function RootLayout({
   children,
@@ -88,6 +90,22 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
+
+  // Maintenance Mode Logic
+  if (config?.isMaintenanceMode) {
+    const headersList = headers();
+    const pathname = (await headersList).get("x-pathname") || "";
+
+    // Allow admin pages, auth pages, and the maintenance page itself
+    const isAdmin = pathname.startsWith("/admin");
+    const isAuth = pathname.startsWith("/auth");
+    const isMaintenancePage = pathname === "/maintenance";
+    const isApi = pathname.startsWith("/api");
+
+    if (!isAdmin && !isAuth && !isMaintenancePage && !isApi) {
+      redirect("/maintenance");
+    }
+  }
 
   return (
     <html lang="pl">

@@ -381,3 +381,26 @@ export async function updateCookiePolicy(prevState: any, formData: FormData) {
         return { success: false, message: error instanceof Error ? error.message : "Błąd aktualizacji polityki cookies." };
     }
 }
+
+export async function updateMaintenanceMode(prevState: any, formData: FormData) {
+    const session = await getServerSession(authOptions);
+    if (!checkPermission(session)) return { success: false, message: "Brak uprawnień." };
+
+    const isMaintenanceMode = formData.get("isMaintenanceMode") === "on";
+    const maintenanceMessage = (formData.get("maintenanceMessage") as string) || null;
+
+    try {
+        await prisma.siteConfig.upsert({
+            where: { id: "main" },
+            update: { isMaintenanceMode, maintenanceMessage },
+            create: { id: "main", isMaintenanceMode, maintenanceMessage },
+        });
+
+        revalidatePath("/", "layout");
+        revalidatePath("/admin/wyglad");
+        return { success: true, message: `Tryb serwisowy ${isMaintenanceMode ? "włączony" : "wyłączony"}.` };
+    } catch (error) {
+        console.error("Failed to update maintenance mode:", error);
+        return { success: false, message: "Błąd aktualizacji trybu serwisowego." };
+    }
+}
