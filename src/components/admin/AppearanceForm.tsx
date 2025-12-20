@@ -3,7 +3,6 @@
 import { useState, useActionState } from "react";
 import { updateCompanyData, updateSocialMedia, updateContactData, updateHomepageSettings, updateBranding, updateSeoConfig, updateMaintenanceMode } from "@/app/admin/wyglad/actions";
 import { AppearanceNavigationForm } from "./AppearanceNavigationForm"; // Added import
-import { FooterDocumentsForm } from "./FooterDocumentsForm";
 import { Loader2, Check, Upload } from "lucide-react";
 import Image from "next/image";
 
@@ -82,7 +81,7 @@ function SubmitButton({ isPending }: { isPending: boolean }) {
     );
 }
 
-function BrandingForm({ config }: Props) {
+export function BrandingForm({ config }: Props) {
     const [state, formAction, isPending] = useActionState(updateBranding, initialState);
     const [preview, setPreview] = useState<string | null>(config?.logoUrl || null);
     const [logoUrl, setLogoUrl] = useState<string>(config?.logoUrl || "");
@@ -168,12 +167,12 @@ function BrandingForm({ config }: Props) {
     );
 }
 
-function CompanyForm({ config }: Props) {
+export function CompanyForm({ config }: Props) {
     const [state, formAction, isPending] = useActionState(updateCompanyData, initialState);
 
     return (
         <form action={formAction} className="bg-white shadow sm:rounded-lg p-6 space-y-6">
-            <h3 className="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Dane Firmowe (Stopka)</h3>
+            <h3 className="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Dane Stowarzyszenia</h3>
             <FormFeedback state={state} />
             <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                 <div className="sm:col-span-6">
@@ -206,7 +205,7 @@ function CompanyForm({ config }: Props) {
     );
 }
 
-function SocialMediaForm({ config }: Props) {
+export function SocialMediaForm({ config }: Props) {
     const [state, formAction, isPending] = useActionState(updateSocialMedia, initialState);
 
     return (
@@ -238,7 +237,7 @@ function SocialMediaForm({ config }: Props) {
     );
 }
 
-function SeoForm({ config }: Props) {
+export function SeoForm({ config }: Props) {
     const [state, formAction, isPending] = useActionState(updateSeoConfig, initialState);
 
     // Favicon State
@@ -358,8 +357,6 @@ function SeoForm({ config }: Props) {
                             )}
                         </div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-2">Mała ikona widoczna na karcie i w Google. Maks. 10MB.</p>
-                    <p className="text-xs text-gray-400">Rekomendowane: 32x32px lub 192x192px (PNG/ICO)</p>
                 </div>
 
                 <div className="sm:col-span-3">
@@ -386,32 +383,6 @@ function SeoForm({ config }: Props) {
                             )}
                         </div>
                     </div>
-                    <p className="text-xs text-gray-500 mt-2">Obrazek widoczny przy udostępnianiu linku na Facebooku/LinkedIn. Maks. 10MB.</p>
-                    <p className="text-xs text-gray-400">Rekomendowane: 1200x630px (1.91:1)</p>
-                </div>
-
-                <div className="sm:col-span-6 border-t border-gray-200 pt-6">
-                    <label htmlFor="googleCalendarId" className="block text-sm font-medium text-gray-700 mb-1">ID Kalendarza Google</label>
-                    <input type="text" name="googleCalendarId" id="googleCalendarId" defaultValue={config?.googleCalendarId || ""} placeholder="abc...123@group.calendar.google.com" className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
-                    <p className="text-xs text-gray-500 mt-2">Umożliwia synchronizację i wyświetlanie publicznego kalendarza Google na stronie wydarzeń.</p>
-                </div>
-
-                <div className="sm:col-span-6 border-t border-gray-200 pt-6">
-                    <label htmlFor="accessibilityInfo" className="block text-sm font-medium text-gray-700 mb-1">
-                        Informacja o Dostępności Architektonicznej
-                    </label>
-                    <textarea
-                        name="accessibilityInfo"
-                        id="accessibilityInfo"
-                        rows={4}
-                        defaultValue={config?.accessibilityInfo || ""}
-                        placeholder="Opisz dostępność architektoniczną siedziby (rampa, winda, szerokie drzwi, toaleta dla osób z niepełnosprawnościami, itp.)"
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-                    />
-                    <p className="text-xs text-gray-500 mt-2">
-                        Wyświetlane na stronie <strong>/deklaracja-dostepnosci</strong>.
-                        Opisz dostępność fizyczną do siedziby stowarzyszenia (zgodnie z ustawą o dostępności).
-                    </p>
                 </div>
             </div>
             <SubmitButton isPending={isPending} />
@@ -419,7 +390,24 @@ function SeoForm({ config }: Props) {
     );
 }
 
-function ContactForm({ config }: Props) {
+export function CalendarForm({ config }: Props) {
+    const [state, formAction, isPending] = useActionState(updateSeoConfig, initialState);
+
+    return (
+        <form action={formAction} className="bg-white shadow sm:rounded-lg p-6 space-y-6">
+            <h3 className="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Kalendarz</h3>
+            <FormFeedback state={state} />
+            <div className="space-y-4">
+                <label htmlFor="googleCalendarId" className="block text-sm font-medium text-gray-700 mb-1">ID Kalendarza Google</label>
+                <input type="text" name="googleCalendarId" id="googleCalendarId" defaultValue={config?.googleCalendarId || ""} placeholder="abc...123@group.calendar.google.com" className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
+                <p className="text-xs text-gray-500 mt-2">Umożliwia synchronizację i wyświetlanie publicznego kalendarza Google na stronie wydarzeń.</p>
+            </div>
+            <SubmitButton isPending={isPending} />
+        </form>
+    );
+}
+
+export function ContactForm({ config }: Props) {
     const [state, formAction, isPending] = useActionState(updateContactData, initialState);
 
     return (
@@ -452,7 +440,7 @@ function ContactForm({ config }: Props) {
     );
 }
 
-function HomepageSettingsForm({ config }: Props) {
+export function HomepageSettingsForm({ config }: Props) {
     const [state, formAction, isPending] = useActionState(updateHomepageSettings, initialState);
 
     return (
@@ -556,7 +544,7 @@ function HomepageSettingsForm({ config }: Props) {
     );
 }
 
-function MaintenanceModeForm({ config }: Props) {
+export function MaintenanceModeForm({ config }: Props) {
     const [state, formAction, isPending] = useActionState(updateMaintenanceMode, initialState);
 
     return (
@@ -630,7 +618,6 @@ export function AppearanceForm({ config }: Props) {
             <SeoForm config={config} />
             <CompanyForm config={config} />
             <SocialMediaForm config={config} />
-            <FooterDocumentsForm config={config} />
             <ContactForm config={config} />
         </div>
     );

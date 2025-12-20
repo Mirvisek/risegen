@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { AppearanceForm } from "@/components/admin/AppearanceForm";
+import {
+    BrandingForm,
+    CompanyForm,
+    SocialMediaForm,
+    SeoForm,
+    ContactForm,
+    HomepageSettingsForm,
+    MaintenanceModeForm
+} from "@/components/admin/AppearanceForm";
+import { AppearanceNavigationForm } from "@/components/admin/AppearanceNavigationForm";
 import { PartnersList } from "@/components/admin/PartnersList";
 import { AboutTextForm } from "@/components/admin/AboutTextForm";
 import { HomeSliderManager } from "@/components/admin/HomeSliderManager";
@@ -12,6 +21,28 @@ import { EmailConfigForm } from "@/components/admin/EmailConfigForm";
 import { CodeInjectionForm } from "@/components/admin/CodeInjectionForm";
 import { PrivacyPolicyForm } from "@/components/admin/PrivacyPolicyForm";
 import { CookiePolicyForm } from "@/components/admin/CookiePolicyForm";
+import { AccessibilityDeclarationForm } from "@/components/admin/AccessibilityDeclarationForm";
+import { TeamSettingsForm } from "@/components/admin/TeamSettingsForm";
+import {
+    Settings,
+    Palette,
+    ShieldCheck,
+    Terminal,
+    Globe,
+    Layout,
+    Image as ImageIcon,
+    Users,
+    FileText,
+    Share2,
+    Calendar,
+    Hammer,
+    Mail,
+    Code,
+    Search,
+    Menu,
+    Eye,
+    Handshake
+} from "lucide-react";
 
 interface AppearancePageTabsProps {
     config: any;
@@ -21,169 +52,158 @@ interface AppearancePageTabsProps {
     documents: any[];
 }
 
+type MainTab = "general" | "appearance" | "policies" | "config";
+
 export function AppearancePageTabs({ config, partners, slides, members, documents }: AppearancePageTabsProps) {
-    const [activeTab, setActiveTab] = useState<"general" | "slider" | "team" | "documents" | "partners" | "about-text" | "email-config" | "code-injection" | "privacy-policy" | "cookie-policy">("general");
+    const [activeMainTab, setActiveMainTab] = useState<MainTab>("general");
+    const [activeSubTab, setActiveSubTab] = useState<string>("general-org");
+
+    const mainTabs = [
+        { id: "general", label: "Ogólne", icon: Settings },
+        { id: "appearance", label: "Wygląd", icon: Palette },
+        { id: "policies", label: "Polityki", icon: ShieldCheck },
+        { id: "config", label: "Konfiguracja", icon: Terminal },
+    ];
+
+    const subTabs: Record<MainTab, { id: string, label: string, icon: any }[]> = {
+        general: [
+            { id: "general-org", label: "Dane Stowarzyszenia", icon: Settings },
+            { id: "general-contact", label: "Dane kontaktowe", icon: Mail },
+            { id: "general-socials", label: "Media społecznościowe", icon: Share2 },
+        ],
+        appearance: [
+            { id: "appearance-home", label: "Ustawienia Strony Głównej", icon: Layout },
+            { id: "appearance-nav", label: "Nawigacja: Menu „O Nas”", icon: Menu },
+            { id: "appearance-branding", label: "Branding", icon: ImageIcon },
+            { id: "appearance-banner", label: "Baner (Slider)", icon: ImageIcon },
+            { id: "appearance-team", label: "Zespół", icon: Users },
+            { id: "appearance-docs", label: "Dokumenty", icon: FileText },
+            { id: "appearance-about", label: "Teksty z menu „O Nas”", icon: FileText },
+            { id: "appearance-partners", label: "Partnerzy", icon: Handshake },
+        ],
+        policies: [
+            { id: "policies-privacy", label: "Polityka prywatności", icon: ShieldCheck },
+            { id: "policies-cookies", label: "Polityka cookies", icon: ShieldCheck },
+            { id: "policies-accessibility", label: "Deklaracja dostępności", icon: Eye },
+        ],
+        config: [
+            { id: "config-seo", label: "Ustawienia SEO", icon: Search },
+            { id: "config-email", label: "Konfiguracja E-Mail", icon: Mail },
+            { id: "config-codes", label: "Kody / integracje", icon: Code },
+            { id: "config-calendar", label: "Kalendarz", icon: Calendar },
+            { id: "config-maintenance", label: "Tryb przebudowy", icon: Hammer },
+        ]
+    };
+
+    const handleMainTabChange = (tabId: MainTab) => {
+        setActiveMainTab(tabId);
+        setActiveSubTab(subTabs[tabId][0].id);
+    };
 
     return (
-        <div className="space-y-6">
-            <div className="border-b border-gray-200 overflow-x-auto">
-                <nav className="-mb-px flex space-x-6">
-                    <button
-                        onClick={() => setActiveTab("general")}
-                        className={cn(
-                            "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                            activeTab === "general"
-                                ? "border-indigo-500 text-indigo-600"
-                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        )}
-                    >
-                        Ogólne
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("slider")}
-                        className={cn(
-                            "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                            activeTab === "slider"
-                                ? "border-indigo-500 text-indigo-600"
-                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        )}
-                    >
-                        Baner
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("about-text")}
-                        className={cn(
-                            "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                            activeTab === "about-text"
-                                ? "border-indigo-500 text-indigo-600"
-                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        )}
-                    >
-                        Teksty O Nas
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("team")}
-                        className={cn(
-                            "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                            activeTab === "team"
-                                ? "border-indigo-500 text-indigo-600"
-                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        )}
-                    >
-                        Zespół
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("documents")}
-                        className={cn(
-                            "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                            activeTab === "documents"
-                                ? "border-indigo-500 text-indigo-600"
-                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        )}
-                    >
-                        Dokumenty
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("email-config")}
-                        className={cn(
-                            "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                            activeTab === "email-config"
-                                ? "border-indigo-500 text-indigo-600"
-                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        )}
-                    >
-                        Konfiguracja E-mail
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("code-injection")}
-                        className={cn(
-                            "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                            activeTab === "code-injection"
-                                ? "border-indigo-500 text-indigo-600"
-                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        )}
-                    >
-                        Kody / Integracje
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("privacy-policy")}
-                        className={cn(
-                            "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                            activeTab === "privacy-policy"
-                                ? "border-indigo-500 text-indigo-600"
-                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        )}
-                    >
-                        Polityka Prywatności
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("cookie-policy")}
-                        className={cn(
-                            "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                            activeTab === "cookie-policy"
-                                ? "border-indigo-500 text-indigo-600"
-                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        )}
-                    >
-                        Polityka Cookies
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("partners")}
-                        className={cn(
-                            "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
-                            activeTab === "partners"
-                                ? "border-indigo-500 text-indigo-600"
-                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        )}
-                    >
-                        Partnerzy
-                    </button>
+        <div className="flex flex-col h-full bg-gray-50/50 rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+            {/* Main Tabs Header */}
+            <div className="bg-white border-b border-gray-200 px-6 pt-6">
+                <nav className="-mb-px flex space-x-8">
+                    {mainTabs.map((tab) => {
+                        const Icon = tab.icon;
+                        const isActive = activeMainTab === tab.id;
+                        return (
+                            <button
+                                key={tab.id}
+                                onClick={() => handleMainTabChange(tab.id as MainTab)}
+                                className={cn(
+                                    "flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-all",
+                                    isActive
+                                        ? "border-indigo-600 text-indigo-600"
+                                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                                )}
+                            >
+                                <Icon className={cn("h-4 w-4", isActive ? "text-indigo-600" : "text-gray-400")} />
+                                {tab.label}
+                            </button>
+                        );
+                    })}
                 </nav>
             </div>
 
-            <div className="animate-in fade-in duration-300">
-                {activeTab === "general" && (
-                    <div>
-                        <div className="mb-6">
-                            <h2 className="text-xl font-bold text-gray-900">Ustawienia Organizacji i Stopki</h2>
-                            <p className="mt-1 text-sm text-gray-500">
-                                Edytuj dane kontaktowe i wygląd stopki.
-                            </p>
-                        </div>
-                        <AppearanceForm config={config} />
+            <div className="flex flex-1 overflow-hidden min-h-[700px]">
+                {/* Sub-tabs Sidebar */}
+                <aside className="w-64 bg-white border-r border-gray-200 p-4 space-y-1 overflow-y-auto shrink-0">
+                    <p className="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Sekcje</p>
+                    {subTabs[activeMainTab].map((tab) => {
+                        const Icon = tab.icon;
+                        const isActive = activeSubTab === tab.id;
+                        return (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveSubTab(tab.id)}
+                                className={cn(
+                                    "w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+                                    isActive
+                                        ? "bg-indigo-50 text-indigo-700 shadow-sm border border-indigo-100/50"
+                                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 border border-transparent"
+                                )}
+                            >
+                                <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-indigo-600" : "text-gray-400")} />
+                                <span className="truncate">{tab.label}</span>
+                            </button>
+                        );
+                    })}
+                </aside>
+
+                {/* Content Area */}
+                <main className="flex-1 p-8 overflow-y-auto bg-white/40 backdrop-blur-sm">
+                    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
+                        {/* Ogólne Content */}
+                        {activeSubTab === "general-org" && <CompanyForm config={config} />}
+                        {activeSubTab === "general-contact" && <ContactForm config={config} />}
+                        {activeSubTab === "general-socials" && <SocialMediaForm config={config} />}
+
+                        {/* Wygląd Content */}
+                        {activeSubTab === "appearance-home" && <HomepageSettingsForm config={config} />}
+                        {activeSubTab === "appearance-nav" && <AppearanceNavigationForm config={config} />}
+                        {activeSubTab === "appearance-branding" && <BrandingForm config={config} />}
+                        {activeSubTab === "appearance-banner" && <HomeSliderManager slides={slides} config={config} />}
+                        {activeSubTab === "appearance-team" && (
+                            <div className="space-y-12">
+                                <TeamSettingsForm config={config} />
+                                <div className="border-t pt-12">
+                                    <TeamManager members={members} />
+                                </div>
+                            </div>
+                        )}
+                        {activeSubTab === "appearance-docs" && <DocumentManager documents={documents} />}
+                        {activeSubTab === "appearance-about" && (
+                            <AboutTextForm
+                                initialText={config?.aboutUsText}
+                                initialGoals={config?.aboutUsGoals}
+                                initialJoinText={config?.aboutUsJoinText}
+                            />
+                        )}
+                        {activeSubTab === "appearance-partners" && <PartnersList partners={partners} />}
+
+                        {/* Polityki Content */}
+                        {activeSubTab === "policies-privacy" && <PrivacyPolicyForm config={config} />}
+                        {activeSubTab === "policies-cookies" && <CookiePolicyForm config={config} />}
+                        {activeSubTab === "policies-accessibility" && <AccessibilityDeclarationForm config={config} />}
+
+                        {/* Konfiguracja Content */}
+                        {activeSubTab === "config-seo" && <SeoForm config={config} />}
+                        {activeSubTab === "config-email" && <EmailConfigForm config={config} />}
+                        {activeSubTab === "config-codes" && <CodeInjectionForm config={config} />}
+                        {activeSubTab === "config-calendar" && (
+                            <div className="bg-white shadow sm:rounded-lg p-6 space-y-6">
+                                <h3 className="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Kalendarz</h3>
+                                <div className="space-y-4">
+                                    <p className="text-sm text-gray-500">Zarządzaj identyfikatorem kalendarza Google wyświetlanego na stronie.</p>
+                                    <SeoForm config={config} /> {/* This covers calendar id, though split might be better later */}
+                                </div>
+                            </div>
+                        )}
+                        {activeSubTab === "config-maintenance" && <MaintenanceModeForm config={config} />}
                     </div>
-                )}
-                {activeTab === "slider" && (
-                    <HomeSliderManager slides={slides} config={config} />
-                )}
-                {activeTab === "about-text" && (
-                    <AboutTextForm
-                        initialText={config?.aboutUsText}
-                        initialGoals={config?.aboutUsGoals}
-                        initialJoinText={config?.aboutUsJoinText}
-                    />
-                )}
-                {activeTab === "team" && (
-                    <TeamManager members={members} />
-                )}
-                {activeTab === "documents" && (
-                    <DocumentManager documents={documents} />
-                )}
-                {activeTab === "email-config" && (
-                    <EmailConfigForm config={config} />
-                )}
-                {activeTab === "code-injection" && (
-                    <CodeInjectionForm config={config} />
-                )}
-                {activeTab === "privacy-policy" && (
-                    <PrivacyPolicyForm config={config} />
-                )}
-                {activeTab === "cookie-policy" && (
-                    <CookiePolicyForm config={config} />
-                )}
-                {activeTab === "partners" && (
-                    <PartnersList partners={partners} />
-                )}
+                </main>
             </div>
         </div>
     );

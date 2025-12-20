@@ -8,6 +8,7 @@ import { pl } from "date-fns/locale";
 import Link from "next/link";
 import { Calendar as CalendarIcon, MapPin, ExternalLink, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { CalendarButtons } from "./CalendarButtons";
 
 interface Event {
     id: string;
@@ -33,11 +34,6 @@ export function EventsView({ events, googleCalendarId }: { events: Event[], goog
     const filteredEvents = events.filter(e => isSameDay(new Date(e.date), selectedDate));
     const upcomingEvents = events.filter(e => new Date(e.date) >= new Date()).slice(0, 3);
 
-    const getGoogleCalendarUrl = (event: Event) => {
-        const start = new Date(event.date).toISOString().replace(/-|:|\.\d\d\d/g, "");
-        const end = new Date(new Date(event.date).getTime() + 60 * 60 * 1000).toISOString().replace(/-|:|\.\d\d\d/g, "");
-        return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${start}/${end}&details=${encodeURIComponent(event.content.substring(0, 200))}&location=${encodeURIComponent(event.location || "")}`;
-    };
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -104,15 +100,7 @@ export function EventsView({ events, googleCalendarId }: { events: Event[], goog
                                                     <ChevronRight className="h-4 w-4" />
                                                 </Link>
                                             </div>
-                                            <div className="mt-4 flex gap-2">
-                                                <Link
-                                                    href={getGoogleCalendarUrl(event)}
-                                                    target="_blank"
-                                                    className="text-xs bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 px-3 py-1.5 rounded-full font-bold hover:bg-indigo-200 transition"
-                                                >
-                                                    + Google Calendar
-                                                </Link>
-                                            </div>
+                                            <CalendarButtons event={event} />
                                         </motion.div>
                                     ))
                                 ) : (

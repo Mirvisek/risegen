@@ -5,6 +5,7 @@ import { pl } from "date-fns/locale";
 import ReactMarkdown from "react-markdown";
 import { Calendar as CalendarIcon, MapPin, Download, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { CalendarButtons } from "@/components/CalendarButtons";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
@@ -58,6 +59,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                                     <span className="font-medium">{event.location}</span>
                                 </div>
                             )}
+                        </div>
+                        <div className="flex justify-start">
+                            <CalendarButtons event={event} />
                         </div>
                     </header>
 

@@ -127,10 +127,10 @@ model SiteConfig {
   faviconUrl           String?
   ogImageUrl           String?
   aboutUsSublinks      String?
-  footerDocuments      String?
   headCode             String?
   footerCode           String?
   accessibilityInfo    String?
+  accessibilityDeclarationContent String?
   privacyPolicyContent String?
   cookiePolicyContent  String?
   recaptchaSiteKey     String?

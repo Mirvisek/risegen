@@ -251,37 +251,6 @@ export async function updateNavigation(prevState: any, formData: FormData) {
     }
 }
 
-export async function updateFooterDocuments(prevState: any, formData: FormData) {
-    const session = await getServerSession(authOptions);
-    if (!checkPermission(session)) return { success: false, message: "Brak uprawnień." };
-
-    const footerDocuments = formData.get("footerDocuments") as string; // JSON string
-
-    // Validation
-    try {
-        const docs = JSON.parse(footerDocuments);
-        if (Array.isArray(docs) && docs.length > 3) {
-            return { success: false, message: "Maksymalnie 3 dokumenty są dozwolone." };
-        }
-    } catch (e) {
-        // If empty string or invalid JSON, it might break, but usually it's []
-    }
-
-    try {
-        await prisma.siteConfig.upsert({
-            where: { id: "main" },
-            update: { footerDocuments },
-            create: { id: "main", footerDocuments },
-        });
-
-        revalidatePath("/");
-        revalidatePath("/admin/wyglad");
-        return { success: true, message: "Dokumenty stopki zaktualizowane." };
-    } catch (error) {
-        console.error("Failed to update footer docs:", error);
-        return { success: false, message: "Błąd aktualizacji dokumentów stopki." };
-    }
-}
 
 export async function updateEmailConfig(prevState: any, formData: FormData) {
     const session = await getServerSession(authOptions);
@@ -402,5 +371,28 @@ export async function updateMaintenanceMode(prevState: any, formData: FormData) 
     } catch (error) {
         console.error("Failed to update maintenance mode:", error);
         return { success: false, message: "Błąd aktualizacji trybu serwisowego." };
+    }
+}
+
+export async function updateAccessibilityDeclaration(prevState: any, formData: FormData) {
+    const session = await getServerSession(authOptions);
+    if (!checkPermission(session)) return { success: false, message: "Brak uprawnień." };
+
+    const accessibilityInfo = formData.get("accessibilityInfo") as string;
+    const accessibilityDeclarationContent = formData.get("accessibilityDeclarationContent") as string;
+
+    try {
+        await prisma.siteConfig.upsert({
+            where: { id: "main" },
+            update: { accessibilityInfo, accessibilityDeclarationContent },
+            create: { id: "main", accessibilityInfo, accessibilityDeclarationContent },
+        });
+
+        revalidatePath("/deklaracja-dostepnosci");
+        revalidatePath("/admin/wyglad");
+        return { success: true, message: "Deklaracja dostępności zaktualizowana." };
+    } catch (error) {
+        console.error("Failed to update accessibility declaration:", error);
+        return { success: false, message: "Błąd zapisu w bazie danych." };
     }
 }
