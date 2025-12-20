@@ -12,11 +12,7 @@ model User {
   email              String    @unique
   password           String
   name               String?
-  // role used to be single string, now we use JSON string array "['ADMIN', 'EDITOR']"
-  // For backward compatibility we might keep role but better to just use new field
-  // But due to existing data, I will just repurpose the field or add a new one.
-  // Actually, I'll replace it to force update.
-  roles              String    @default("[\"EDITOR\"]") 
+  roles              String    @default("[\"EDITOR\"]")
   mustChangePassword Boolean   @default(false)
   resetToken         String?
   resetTokenExpiry   DateTime?
@@ -29,11 +25,11 @@ model Project {
   title       String
   slug        String   @unique
   description String?
-  content     String // Rich text or markdown
-  images      String   @default("[]") // JSON string of image URLs
-  documents   String   @default("[]") // JSON string of documents: [{name: string, url: string}]
+  content     String
+  images      String   @default("[]")
+  documents   String   @default("[]")
   isHighlight Boolean  @default(false)
-  status      String   @default("CURRENT") // CURRENT, COMPLETED
+  status      String   @default("CURRENT")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -44,27 +40,27 @@ model News {
   slug        String   @unique
   content     String
   images      String   @default("[]")
-  documents   String   @default("[]") // JSON string of documents: [{name: string, url: string}]
+  documents   String   @default("[]")
   isHighlight Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Application {
-  id          String   @id @default(cuid())
-  firstName   String
-  lastName    String
-  email       String
-  phone       String
-  instagram   String?
-  description String
-  type        String   @default("MEMBER") // MEMBER, VOLUNTEER
-  status         String   @default("NEW") // NEW, READ, IN_PROGRESS, DONE, DELETED
+  id             String    @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String
+  phone          String
+  instagram      String?
+  description    String
+  type           String    @default("MEMBER")
+  status         String    @default("NEW")
   birthDate      DateTime?
-  assignedUserId String? // ID of the admin handling this ticket
-  deletionReason String? // Reason if status is DELETED
-  createdAt      DateTime @default(now())
-  number         Int      @default(0)
+  assignedUserId String?
+  deletionReason String?
+  createdAt      DateTime  @default(now())
+  number         Int       @default(0)
 }
 
 model VisitLog {
@@ -79,108 +75,85 @@ model ContactMessage {
   email     String
   subject   String?
   message   String
-  status    String   @default("NEW") // NEW, READ, IN_PROGRESS, DONE
+  status    String   @default("NEW")
   createdAt DateTime @default(now())
   number    Int      @default(0)
 }
 
 model SiteConfig {
-  id         String   @id @default("main")
-  orgName    String?
-  orgAddress String?
-  orgNip     String?
-  orgRegon   String?
-  orgBankAccount String?
-  siteName   String?  // Brand name displayed in Navbar
-  logoUrl    String?  // Logo URL for Navbar
-  email      String? // Email displayed on Contact Page
-  phone      String? // Phone displayed on Contact Page
-  facebookUrl String?
-  instagramUrl String?
-  tiktokUrl   String?
-
-
-  updatedAt DateTime @updatedAt
-
-  // Feature Toggles for Team Page
-  showBoard         Boolean  @default(true)
-  showOffice        Boolean  @default(true)
-  showCoordinators  Boolean  @default(true)
-  showCollaborators Boolean  @default(true)
-
-  // Feature Toggles for Homepage
-  showHero          Boolean  @default(true)
-  showNews          Boolean  @default(true)
-  showProjects      Boolean  @default(true)
-  showPartners      Boolean  @default(true)
-
-  // Hero Configuration
-  enableHeroSlider  Boolean  @default(true)
-  staticHeroTitle   String?
-  staticHeroSubtitle String?
-  staticHeroImage   String?
-  staticHeroAlignment String @default("center") // "top", "center", "bottom"
-  staticHeroAuthor  String?
-
-  // Dynamic Content
-  aboutUsText       String?  // Custom text for "About Us" page
-  aboutUsGoals      String?  // Newline separated list of goals
-  aboutUsJoinText   String?  // Custom text for "Join Us" section
-
-  // Email Configuration
+  id                   String   @id @default("main")
+  orgName              String?
+  orgAddress           String?
+  orgNip               String?
+  orgRegon             String?
+  orgBankAccount       String?
+  siteName             String?
+  logoUrl              String?
+  email                String?
+  phone                String?
+  facebookUrl          String?
+  instagramUrl         String?
+  tiktokUrl            String?
+  updatedAt            DateTime @updatedAt
+  showBoard            Boolean  @default(true)
+  showOffice           Boolean  @default(true)
+  showCoordinators     Boolean  @default(true)
+  showCollaborators    Boolean  @default(true)
+  showHero             Boolean  @default(true)
+  showNews             Boolean  @default(true)
+  showProjects         Boolean  @default(true)
+  showPartners         Boolean  @default(true)
+  enableHeroSlider     Boolean  @default(true)
+  staticHeroTitle      String?
+  staticHeroSubtitle   String?
+  staticHeroImage      String?
+  staticHeroAlignment  String   @default("center")
+  staticHeroAuthor     String?
+  aboutUsText          String?
+  aboutUsGoals         String?
+  aboutUsJoinText      String?
   smtpHost             String?
   smtpPort             Int?
   smtpUser             String?
   smtpPassword         String?
   smtpFrom             String?
-  emailForApplications String? // Where to send "Zgłoszenia"
-  emailForContact      String? // Where to send "Kontakt"
-
-  // SEO Configuration
-  seoTitle          String?  // Title tag override
-  seoDescription    String?  // Meta description
-  seoKeywords       String?  // Meta keywords
-  seoAuthor         String?  // Meta author
-  seoRobots         String?  // Meta robots (index/follow)
-  faviconUrl        String?  // Favicon / Site Icon
-  ogImageUrl        String?  // Open Graph Image
-  aboutUsSublinks   String?  // JSON String: [{"name": "", "href": ""}]
-  footerDocuments   String?  // JSON String: [{"name": "", "url": ""}] max 3
-
-  headCode          String?  // Custom scripts for <head>
-  footerCode        String?  // Custom scripts for before </body>
-
-  // Accessibility
-  accessibilityInfo String?  // Architectural accessibility description for declaration page
-  privacyPolicyContent String?  // Privacy policy content editable from admin
-  cookiePolicyContent String?  // Cookie policy content editable from admin
-
-  // Integrations
-  recaptchaSiteKey    String?
-  recaptchaSecretKey  String?
-  googleAnalyticsId   String?
-  googleCalendarId    String? // Google Calendar ID for synchronization
-
-  // Feature Toggles
-  showEvents          Boolean  @default(true)
-  showStats           Boolean  @default(true)
-
-  // Maintenance Mode
-  isMaintenanceMode   Boolean  @default(false)
-  maintenanceMessage  String?
+  emailForApplications String?
+  emailForContact      String?
+  seoTitle             String?
+  seoDescription       String?
+  seoKeywords          String?
+  seoAuthor            String?
+  seoRobots            String?
+  faviconUrl           String?
+  ogImageUrl           String?
+  aboutUsSublinks      String?
+  footerDocuments      String?
+  headCode             String?
+  footerCode           String?
+  accessibilityInfo    String?
+  privacyPolicyContent String?
+  cookiePolicyContent  String?
+  recaptchaSiteKey     String?
+  recaptchaSecretKey   String?
+  googleAnalyticsId    String?
+  googleCalendarId     String?
+  showEvents           Boolean  @default(true)
+  showStats            Boolean  @default(true)
+  isMaintenanceMode    Boolean  @default(false)
+  maintenanceMessage   String?
 }
 
 model Event {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  content     String
-  date        DateTime
-  location    String?
-  images      String   @default("[]")
-  documents   String   @default("[]")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String
+  date      DateTime
+  location  String?
+  images    String   @default("[]")
+  documents String   @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model FAQ {
@@ -196,27 +169,27 @@ model Stat {
   id        String   @id @default(cuid())
   label     String
   value     String
-  icon      String?  // Optional icon name from lucide-react
+  icon      String?
   order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model AuditLog {
-  id          String   @id @default(cuid())
-  entityType  String   // "Project", "User", "News", "TeamMember", "Document"
-  entityId    String
-  action      String   // "CREATE", "UPDATE", "DELETE"
-  userId      String   // ID of the user who performed the action
-  userEmail   String   // Email of the user (snapshot)
-  details     String   // JSON string: { before: ..., after: ... }
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  entityType String
+  entityId   String
+  action     String
+  userId     String
+  userEmail  String
+  details    String
+  createdAt  DateTime @default(now())
 }
 
 model Partner {
   id        String   @id @default(cuid())
   name      String
-  type      String   // "NGO", "BUSINESS", "OTHER" (stored as simple string labels)
+  type      String
   website   String?
   logo      String
   createdAt DateTime @default(now())
@@ -224,39 +197,39 @@ model Partner {
 }
 
 model TeamMember {
+  id         String   @id @default(cuid())
+  name       String
+  role       String
+  image      String?
+  bio        String?
+  categories String   @default("[]")
+  email      String?
+  phone      String?
+  alignment  String   @default("center")
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Document {
   id          String   @id @default(cuid())
-  name        String
-  role        String   // Display role e.g. "Prezes Zarządu"
-  image       String?
-  bio         String?
-  categories  String   @default("[]") // JSON array of categories
-  email       String?
-  phone       String?
-  alignment   String   @default("center") // "top", "center", "bottom"
+  title       String
+  description String?
+  fileUrl     String
+  category    String   @default("OTHER")
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
-model Document {
-  id        String   @id @default(cuid())
-  title     String
-  description String? // Optional description
-  fileUrl   String   // PDF file URL
-  category  String   @default("OTHER") // BASIC, REPORT, RESOLUTION, OTHER
-  order     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model HomeHeroSlide {
   id        String   @id @default(cuid())
-  image     String   // Image URL
-  link      String?  // Optional redirect URL
-  title     String?  // Title text (optional)
-  subtitle  String?  // Subtitle text (optional)
-  author    String?  // Photographer/Author credit
-  alignment String   @default("center") // "top", "center", "bottom"
+  image     String
+  link      String?
+  title     String?
+  subtitle  String?
+  author    String?
+  alignment String   @default("center")
   order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
