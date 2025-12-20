@@ -1,22 +1,21 @@
 import { prisma } from "@/lib/prisma";
 
 export async function verifyCaptcha(token: string | null) {
-    if (!token) {
-        return false;
-    }
-
     // Fetch config from DB
     const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
 
     // Prefer DB key, fallback to env var
     const secretKey = config?.recaptchaSecretKey || process.env.RECAPTCHA_SECRET_KEY;
+    const siteKey = config?.recaptchaSiteKey || process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
-    if (!secretKey) {
-        // If no secret key is configured, we might want to bypass (for dev) or fail secure.
-        if (process.env.NODE_ENV === 'development') {
-            console.warn("RECAPTCHA_SECRET_KEY not set in DB or ENV. Bypassing captcha verification.");
-            return true;
-        }
+    if (!secretKey || !siteKey) {
+        // If reCAPTCHA is not fully configured, bypass verification so the site remains functional.
+        // The frontend will also hide the widget if siteKey is missing.
+        console.warn("reCAPTCHA is not fully configured (missing siteKey or secretKey). Bypassing verification.");
+        return true;
+    }
+
+    if (!token) {
         return false;
     }
 

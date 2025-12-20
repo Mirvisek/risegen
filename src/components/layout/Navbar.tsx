@@ -76,7 +76,12 @@ export function Navbar({ config }: NavbarProps) {
                                         >
                                             <Link
                                                 href={item.href}
-                                                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-bold text-gray-500 hover:border-indigo-500 hover:text-gray-900 transition-all focus:outline-none"
+                                                className={cn(
+                                                    "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-bold transition-all h-full focus:outline-none",
+                                                    (pathname === item.href || item.children.some(child => pathname === child.href))
+                                                        ? "border-indigo-600 text-gray-900"
+                                                        : "border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-900"
+                                                )}
                                             >
                                                 {item.name}
                                                 <ChevronDown className="ml-1 h-4 w-4" />
@@ -89,7 +94,12 @@ export function Navbar({ config }: NavbarProps) {
                                                             <Link
                                                                 key={child.href}
                                                                 href={child.href}
-                                                                className="block px-4 py-3 text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                                                                className={cn(
+                                                                    "block px-4 py-3 text-sm font-medium transition-colors",
+                                                                    pathname === child.href
+                                                                        ? "bg-indigo-50 text-indigo-600 font-bold"
+                                                                        : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                                                                )}
                                                                 onClick={() => setHoveredItem(null)}
                                                             >
                                                                 {child.name}
@@ -159,7 +169,12 @@ export function Navbar({ config }: NavbarProps) {
                                 <div key={item.name} className="py-2">
                                     <button
                                         onClick={() => setHoveredItem(hoveredItem === item.name ? null : item.name)}
-                                        className="w-full flex justify-between items-center py-2 text-lg font-bold text-gray-900"
+                                        className={cn(
+                                            "w-full flex justify-between items-center py-2 text-lg font-bold transition-colors",
+                                            (pathname === item.href || item.children.some(child => pathname === child.href))
+                                                ? "text-indigo-600"
+                                                : "text-gray-900"
+                                        )}
                                     >
                                         {item.name}
                                         <ChevronDown className={cn("h-5 w-5 transition-transform", hoveredItem === item.name ? "rotate-180" : "")} />
@@ -167,7 +182,10 @@ export function Navbar({ config }: NavbarProps) {
                                     <div className={cn("mt-2 pl-4 space-y-2 border-l-2 border-indigo-100", hoveredItem === item.name ? "block" : "hidden")}>
                                         <Link
                                             href={item.href}
-                                            className="block py-2 text-base font-bold text-indigo-600"
+                                            className={cn(
+                                                "block py-2 text-base font-bold transition-colors",
+                                                pathname === item.href ? "text-indigo-600" : "text-gray-600 hover:text-indigo-600"
+                                            )}
                                             onClick={() => setIsOpen(false)}
                                         >
                                             {item.name} - Główna
@@ -176,7 +194,10 @@ export function Navbar({ config }: NavbarProps) {
                                             <Link
                                                 key={child.href}
                                                 href={child.href}
-                                                className="block py-2 text-base font-medium text-gray-600 hover:text-indigo-600"
+                                                className={cn(
+                                                    "block py-2 text-base font-medium transition-colors",
+                                                    pathname === child.href ? "text-indigo-600" : "text-gray-600 hover:text-indigo-600"
+                                                )}
                                                 onClick={() => setIsOpen(false)}
                                             >
                                                 {child.name}
