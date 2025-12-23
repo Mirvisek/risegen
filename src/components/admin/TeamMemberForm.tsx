@@ -2,6 +2,7 @@
 
 import { useActionState, useState, useEffect } from "react";
 import { createTeamMember, updateTeamMember } from "@/app/admin/o-nas/actions";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { Loader2, Plus, Upload, Save, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,6 +39,7 @@ export function TeamMemberForm({ initialData, onCancel }: { initialData?: TeamMe
     const [preview, setPreview] = useState<string | null>(initialData?.image || null);
     const [bio, setBio] = useState(initialData?.bio || "");
     const [mounted, setMounted] = useState(false);
+    const { resolvedTheme } = useTheme();
 
     useEffect(() => {
         setMounted(true);
@@ -105,18 +107,18 @@ export function TeamMemberForm({ initialData, onCancel }: { initialData?: TeamMe
     };
 
     return (
-        <form action={formAction} className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-6">
-            <div className="flex items-center justify-between border-b pb-2">
-                <h3 className="text-lg font-medium text-gray-900">
+        <form action={formAction} className="bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm space-y-6 transition-colors">
+            <div className="flex items-center justify-between border-b dark:border-gray-800 pb-2">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                     {initialData ? "Edytuj Członka Zespołu" : "Dodaj Członka Zespołu"}
                 </h3>
             </div>
 
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-sm font-medium text-gray-700">Zdjęcie</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Zdjęcie</label>
                     <div className="mt-1 flex items-center gap-4">
-                        <div className="relative h-24 w-24 rounded-full overflow-hidden bg-gray-100 border border-gray-200">
+                        <div className="relative h-24 w-24 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                             {preview ? (
                                 <Image src={preview} alt="Preview" fill className="object-cover" />
                             ) : (
@@ -130,10 +132,10 @@ export function TeamMemberForm({ initialData, onCancel }: { initialData?: TeamMe
                                 type="file"
                                 accept="image/*"
                                 onChange={handleImageChange}
-                                className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+                                className="block w-full text-sm text-slate-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 dark:file:bg-violet-900/30 file:text-violet-700 dark:file:text-violet-300 hover:file:bg-violet-100 dark:hover:file:bg-violet-900/50"
                             />
-                            <p className="text-xs text-gray-500 mt-1">Maks. 10MB. Format: JPG, PNG.</p>
-                            <p className="text-xs text-gray-400">Rekomendowane: 400x400px (1:1)</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Maks. 10MB. Format: JPG, PNG.</p>
+                            <p className="text-xs text-gray-400 dark:text-gray-500">Rekomendowane: 400x400px (1:1)</p>
                             {/* Initialize hidden input with existing image URL to preserve it if not changed */}
                             <input type="hidden" name="image" id="image-url" defaultValue={initialData?.image || ""} />
                         </div>
@@ -142,31 +144,31 @@ export function TeamMemberForm({ initialData, onCancel }: { initialData?: TeamMe
 
                 <div className="col-span-2 sm:col-span-1 space-y-4">
                     <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Imię i Nazwisko</label>
-                        <input type="text" name="name" id="name" defaultValue={initialData?.name} required className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Imię i Nazwisko</label>
+                        <input type="text" name="name" id="name" defaultValue={initialData?.name} required className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm transition-colors" />
                     </div>
 
                     <div>
-                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">Rola (stanowisko)</label>
-                        <input type="text" name="role" id="role" defaultValue={initialData?.role} required className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
+                        <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Rola (stanowisko)</label>
+                        <input type="text" name="role" id="role" defaultValue={initialData?.role} required className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm transition-colors" />
                     </div>
 
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" name="email" id="email" defaultValue={initialData?.email || ""} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                        <input type="email" name="email" id="email" defaultValue={initialData?.email || ""} className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm transition-colors" />
                     </div>
 
                     <div>
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Telefon</label>
-                        <input type="text" name="phone" id="phone" defaultValue={initialData?.phone || ""} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Telefon</label>
+                        <input type="text" name="phone" id="phone" defaultValue={initialData?.phone || ""} className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm transition-colors" />
                     </div>
                 </div>
 
                 <div className="col-span-2">
-                    <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">Opis (Biogram)</label>
+                    <label htmlFor="bio" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Opis (Biogram)</label>
                     <input type="hidden" name="bio" value={bio} />
                     {mounted ? (
-                        <div data-color-mode="light">
+                        <div data-color-mode={resolvedTheme === "dark" ? "dark" : "light"}>
                             <MDEditor
                                 value={bio}
                                 onChange={(val) => setBio(val || "")}
@@ -178,15 +180,15 @@ export function TeamMemberForm({ initialData, onCancel }: { initialData?: TeamMe
                             />
                         </div>
                     ) : (
-                        <div className="border border-gray-300 rounded-md p-4 bg-gray-50 h-[250px] flex items-center justify-center">
+                        <div className="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-800 h-[250px] flex items-center justify-center">
                             <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                         </div>
                     )}
-                    <p className="text-xs text-gray-500 mt-2">Użyj formatowania Markdown dla lepszej prezentacji biogramu.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Użyj formatowania Markdown dla lepszej prezentacji biogramu.</p>
                 </div>
 
                 <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Kategorie</label>
                     <div className="grid grid-cols-2 gap-3">
                         {categoriesOptions.map((opt) => (
                             <div key={opt.id} className="flex items-center">
@@ -195,9 +197,9 @@ export function TeamMemberForm({ initialData, onCancel }: { initialData?: TeamMe
                                     type="checkbox"
                                     checked={selectedCategories.includes(opt.id)}
                                     onChange={(e) => handleCategoryChange(opt.id, e.target.checked)}
-                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                    className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-indigo-600 focus:ring-indigo-600"
                                 />
-                                <label htmlFor={`category-${opt.id}`} className="ml-2 text-sm text-gray-700 cursor-pointer select-none">
+                                <label htmlFor={`category-${opt.id}`} className="ml-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer select-none">
                                     {opt.label}
                                 </label>
                             </div>
@@ -207,17 +209,17 @@ export function TeamMemberForm({ initialData, onCancel }: { initialData?: TeamMe
                 </div>
 
                 <div className="col-span-2 sm:col-span-1">
-                    <label htmlFor="order" className="block text-sm font-medium text-gray-700">Kolejność (sortowanie)</label>
-                    <input type="number" name="order" id="order" defaultValue={initialData?.order || 0} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" />
+                    <label htmlFor="order" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Kolejność (sortowanie)</label>
+                    <input type="number" name="order" id="order" defaultValue={initialData?.order || 0} className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm transition-colors" />
                 </div>
 
                 <div className="col-span-2 sm:col-span-1">
-                    <label htmlFor="alignment" className="block text-sm font-medium text-gray-700">Wyrównanie zdjęcia (Pion)</label>
+                    <label htmlFor="alignment" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Wyrównanie zdjęcia (Pion)</label>
                     <select
                         name="alignment"
                         id="alignment"
                         defaultValue={initialData?.alignment || "center"}
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm bg-white"
+                        className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm transition-colors"
                     >
                         <option value="center">Środek (Center)</option>
                         <option value="top">Góra (Top)</option>
@@ -237,7 +239,7 @@ export function TeamMemberForm({ initialData, onCancel }: { initialData?: TeamMe
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-2 px-4 text-sm font-medium text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
                     >
                         Anuluj
                     </button>

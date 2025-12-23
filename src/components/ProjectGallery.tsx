@@ -16,7 +16,7 @@ export function ProjectGallery({ images, title }: ProjectGalleryProps) {
 
     if (!images || images.length === 0) {
         return (
-            <div className="bg-gray-100 rounded-2xl h-64 md:h-96 w-full flex items-center justify-center text-gray-400">
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl h-64 md:h-96 w-full flex items-center justify-center text-gray-400 dark:text-gray-500">
                 Brak zdjęć
             </div>
         );
@@ -36,7 +36,7 @@ export function ProjectGallery({ images, title }: ProjectGalleryProps) {
         <div className="space-y-4">
             {/* Main Image Stage */}
             <div
-                className="relative h-64 md:h-[500px] w-full rounded-2xl overflow-hidden bg-gray-100 border cursor-zoom-in group"
+                className="relative h-64 md:h-[500px] w-full rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 border dark:border-gray-700 cursor-zoom-in group"
                 onClick={() => setIsLightboxOpen(true)}
             >
                 <Image
@@ -57,15 +57,15 @@ export function ProjectGallery({ images, title }: ProjectGalleryProps) {
                     <>
                         <button
                             onClick={prevImage}
-                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white transition opacity-0 group-hover:opacity-100"
+                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-900/80 p-2 rounded-full hover:bg-white dark:hover:bg-gray-900 transition opacity-0 group-hover:opacity-100"
                         >
-                            <ChevronLeft className="w-5 h-5 text-gray-800" />
+                            <ChevronLeft className="w-5 h-5 text-gray-800 dark:text-gray-200" />
                         </button>
                         <button
                             onClick={nextImage}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white transition opacity-0 group-hover:opacity-100"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-900/80 p-2 rounded-full hover:bg-white dark:hover:bg-gray-900 transition opacity-0 group-hover:opacity-100"
                         >
-                            <ChevronRight className="w-5 h-5 text-gray-800" />
+                            <ChevronRight className="w-5 h-5 text-gray-800 dark:text-gray-200" />
                         </button>
                     </>
                 )}
@@ -80,7 +80,7 @@ export function ProjectGallery({ images, title }: ProjectGalleryProps) {
                             onClick={() => setSelectedIndex(idx)}
                             className={cn(
                                 "relative h-20 w-32 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all",
-                                selectedIndex === idx ? "border-indigo-600 ring-2 ring-indigo-100" : "border-transparent opacity-70 hover:opacity-100"
+                                selectedIndex === idx ? "border-indigo-600 dark:border-indigo-400 ring-2 ring-indigo-100 dark:ring-indigo-900/30" : "border-transparent opacity-70 hover:opacity-100"
                             )}
                         >
                             <Image src={img} alt={`Miniatura ${idx}`} fill className="object-cover" />

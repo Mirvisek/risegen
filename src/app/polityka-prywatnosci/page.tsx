@@ -96,38 +96,38 @@ Administrator zastrzega sobie prawo do wprowadzania zmian w Polityce Prywatnośc
         <div className="container mx-auto px-4 py-16 max-w-4xl">
             <Breadcrumbs items={[{ label: "Polityka Prywatności" }]} />
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-8">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 space-y-8 transition-colors">
                 <div className="text-center space-y-4">
-                    <h1 className="text-4xl font-bold text-gray-900">Polityka Prywatności</h1>
+                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Polityka Prywatności</h1>
                     <div className="w-20 h-1 bg-indigo-600 mx-auto rounded-full"></div>
                 </div>
 
-                <section className="prose prose-gray prose-lg max-w-none text-gray-700">
+                <section className="prose prose-gray dark:prose-invert prose-lg max-w-none text-gray-700 dark:text-gray-300">
                     <ReactMarkdown
                         components={{
-                            h1: ({ node, ...props }) => <h1 className="text-3xl font-bold text-gray-900 mt-8 mb-4" {...props} />,
-                            h2: ({ node, ...props }) => <h2 className="text-2xl font-bold text-gray-900 mt-6 mb-3" {...props} />,
-                            h3: ({ node, ...props }) => <h3 className="text-xl font-semibold text-gray-900 mt-4 mb-2" {...props} />,
+                            h1: ({ node, ...props }) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mt-8 mb-4" {...props} />,
+                            h2: ({ node, ...props }) => <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-6 mb-3" {...props} />,
+                            h3: ({ node, ...props }) => <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-4 mb-2" {...props} />,
                             p: ({ node, ...props }) => <p className="mb-4 leading-relaxed" {...props} />,
                             ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-4 space-y-2" {...props} />,
                             ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-4 space-y-2" {...props} />,
                             li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
-                            strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900" {...props} />,
+                            strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900 dark:text-white" {...props} />,
                         }}
                     >
                         {config?.privacyPolicyContent || defaultContent}
                     </ReactMarkdown>
                 </section>
 
-                <div className="bg-indigo-50 p-6 rounded-lg border border-indigo-200 mt-8">
-                    <h3 className="font-semibold text-indigo-900 mb-4">Dane kontaktowe w sprawach prywatności</h3>
+                <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-lg border border-indigo-200 dark:border-indigo-800/50 mt-8">
+                    <h3 className="font-semibold text-indigo-900 dark:text-indigo-100 mb-4">Dane kontaktowe w sprawach prywatności</h3>
                     <div className="space-y-3">
                         {config?.email && (
                             <div className="flex items-center gap-3">
-                                <Mail className="h-5 w-5 text-indigo-600" />
+                                <Mail className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                                 <a
                                     href={`mailto:${config.email}`}
-                                    className="text-indigo-600 hover:text-indigo-800 font-medium"
+                                    className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
                                 >
                                     {config.email}
                                 </a>
@@ -135,10 +135,10 @@ Administrator zastrzega sobie prawo do wprowadzania zmian w Polityce Prywatnośc
                         )}
                         {config?.phone && (
                             <div className="flex items-center gap-3">
-                                <Phone className="h-5 w-5 text-indigo-600" />
+                                <Phone className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                                 <a
                                     href={`tel:${config.phone.replace(/\s/g, '')}`}
-                                    className="text-indigo-600 hover:text-indigo-800 font-medium"
+                                    className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
                                 >
                                     {config.phone}
                                 </a>

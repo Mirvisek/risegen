@@ -12,6 +12,7 @@ const MDEditor = dynamic(
     () => import("@uiw/react-md-editor").then((mod) => mod.default),
     { ssr: false }
 );
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 function SubmitButton() {
     const { pending } = useFormStatus();
@@ -41,7 +42,7 @@ function FormFeedback({ state }: { state: any }) {
     if (!state?.message) return null;
 
     return (
-        <div className={`mt-4 p-4 rounded-md ${state.success ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}>
+        <div className={`mt-4 p-4 rounded-md ${state.success ? "bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300" : "bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300"}`}>
             <div className="flex">
                 <div className="flex-shrink-0">
                     {state.success ? (
@@ -70,6 +71,7 @@ export function AboutTextForm({ initialText, initialGoals, initialJoinText }: Ab
     const [goals, setGoals] = useState(initialGoals || "");
     const [joinText, setJoinText] = useState(initialJoinText || "");
     const [mounted, setMounted] = useState(false);
+    const { resolvedTheme } = useTheme();
 
     useEffect(() => {
         setMounted(true);
@@ -84,21 +86,21 @@ export function AboutTextForm({ initialText, initialGoals, initialJoinText }: Ab
 
     return (
         <form action={handleSubmit} className="space-y-6">
-            <div className="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
+            <div className="bg-white dark:bg-gray-900 shadow px-4 py-5 sm:rounded-lg sm:p-6 border border-gray-100 dark:border-gray-800 transition-colors">
                 <div className="md:grid md:grid-cols-3 md:gap-6">
                     <div className="md:col-span-1">
-                        <h3 className="text-lg font-medium leading-6 text-gray-900">Teksty z menu „O Nas”</h3>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">Teksty z menu „O Nas”</h3>
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                             Zarządzaj treściami wyświetlanymi na stronie "O Nas".
                         </p>
                     </div>
                     <div className="mt-5 md:mt-0 md:col-span-2 space-y-6">
                         <div>
-                            <label htmlFor="aboutUsText" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="aboutUsText" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Treść powitalna
                             </label>
                             {mounted ? (
-                                <div data-color-mode="light">
+                                <div data-color-mode={resolvedTheme === "dark" ? "dark" : "light"}>
                                     <MDEditor
                                         value={text}
                                         onChange={(val) => setText(val || "")}
@@ -110,21 +112,21 @@ export function AboutTextForm({ initialText, initialGoals, initialJoinText }: Ab
                                     />
                                 </div>
                             ) : (
-                                <div className="border border-gray-300 rounded-md p-4 bg-gray-50 h-[400px] flex items-center justify-center">
+                                <div className="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-800 h-[400px] flex items-center justify-center">
                                     <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                                 </div>
                             )}
-                            <p className="text-xs text-gray-500 mt-2">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                                 Użyj formatowania Markdown dla głównej treści strony O Nas.
                             </p>
                         </div>
 
                         <div>
-                            <label htmlFor="aboutUsGoals" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="aboutUsGoals" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Nasze Cele (Lista)
                             </label>
                             {mounted ? (
-                                <div className="mt-1" data-color-mode="light">
+                                <div className="mt-1" data-color-mode={resolvedTheme === "dark" ? "dark" : "light"}>
                                     <MDEditor
                                         value={goals}
                                         onChange={(val) => setGoals(val || "")}
@@ -136,21 +138,21 @@ export function AboutTextForm({ initialText, initialGoals, initialJoinText }: Ab
                                     />
                                 </div>
                             ) : (
-                                <div className="border border-gray-300 rounded-md p-4 bg-gray-50 h-[300px] flex items-center justify-center">
+                                <div className="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-800 h-[300px] flex items-center justify-center">
                                     <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                                 </div>
                             )}
-                            <p className="mt-2 text-sm text-gray-500">
+                            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                                 Użyj formatowania Markdown. Dla listy punktowanej użyj: - element
                             </p>
                         </div>
 
                         <div>
-                            <label htmlFor="aboutUsJoinText" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="aboutUsJoinText" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Tekst "Dołącz do nas"
                             </label>
                             {mounted ? (
-                                <div data-color-mode="light">
+                                <div data-color-mode={resolvedTheme === "dark" ? "dark" : "light"}>
                                     <MDEditor
                                         value={joinText}
                                         onChange={(val) => setJoinText(val || "")}
@@ -162,11 +164,11 @@ export function AboutTextForm({ initialText, initialGoals, initialJoinText }: Ab
                                     />
                                 </div>
                             ) : (
-                                <div className="border border-gray-300 rounded-md p-4 bg-gray-50 h-[300px] flex items-center justify-center">
+                                <div className="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-800 h-[300px] flex items-center justify-center">
                                     <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                                 </div>
                             )}
-                            <p className="text-xs text-gray-500 mt-2">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                                 Użyj formatowania Markdown dla sekcji "Dołącz do nas".
                             </p>
                         </div>

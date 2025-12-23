@@ -73,49 +73,49 @@ export function NewsForm({ news }: { news?: any }) {
     };
 
     return (
-        <form action={formAction} className="space-y-6 max-w-2xl bg-white p-6 rounded-xl shadow-sm border animate-in fade-in duration-500">
+        <form action={formAction} className="space-y-6 max-w-2xl bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 animate-in fade-in duration-500 transition-colors">
             {news && <input type="hidden" name="id" value={news.id} />}
             <input type="hidden" name="images" value={JSON.stringify(images)} />
             <input type="hidden" name="documents" value={JSON.stringify(documents)} />
 
             {state?.message && !state.success && (
-                <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-md">
+                <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-400 dark:border-red-500 p-4 rounded-md">
                     <div className="flex">
                         <div className="ml-3">
-                            <p className="text-sm text-red-700">{state.message}</p>
+                            <p className="text-sm text-red-700 dark:text-red-300">{state.message}</p>
                         </div>
                     </div>
                 </div>
             )}
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Tytuł</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Tytuł</label>
                 <input
                     name="title"
                     defaultValue={news?.title}
                     onChange={handleTitleChange}
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 text-black"
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors"
                 />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Slug (URL)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Slug (URL)</label>
                 <input
                     name="slug"
                     value={slug}
                     onChange={handleSlugChange}
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-gray-50 text-black"
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white transition-colors"
                 />
-                <p className="text-xs text-gray-500 mt-1">Automatycznie generowany z tytułu, ale możesz go zmienić.</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Automatycznie generowany z tytułu, ale możesz go zmienić.</p>
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Zdjęcia</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Zdjęcia</label>
                 <div className="mt-2 grid grid-cols-3 gap-4 mb-4">
                     {images.map((url, index) => (
-                        <div key={index} className="relative group aspect-video bg-gray-100 rounded-lg overflow-hidden border">
+                        <div key={index} className="relative group aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                             <Image src={url} alt="News image" fill className="object-cover" />
                             <button
                                 type="button"
@@ -128,20 +128,20 @@ export function NewsForm({ news }: { news?: any }) {
                     ))}
                 </div>
                 <div className="flex items-center gap-4">
-                    <label className="cursor-pointer bg-white border border-gray-300 rounded-md px-4 py-2 flex items-center gap-2 hover:bg-gray-50 transition shadow-sm text-sm font-medium text-gray-700">
+                    <label className="cursor-pointer bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300">
                         {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                         {uploading ? "Wysyłanie..." : "Dodaj Zdjęcie"}
                         <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploading} />
                     </label>
                     <div className="flex flex-col">
-                        <span className="text-xs text-gray-500">JPG, PNG, WEBP. Maks. 10MB.</span>
-                        <span className="text-xs text-gray-400">Rekomendowane: 1200x630px (16:9)</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">JPG, PNG, WEBP. Maks. 10MB.</span>
+                        <span className="text-xs text-gray-400 dark:text-gray-500">Rekomendowane: 1200x630px (16:9)</span>
                     </div>
                 </div>
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Załączone Dokumenty</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Załączone Dokumenty</label>
                 <AttachmentsManager
                     attachments={documents}
                     onChange={setDocuments}
@@ -149,7 +149,7 @@ export function NewsForm({ news }: { news?: any }) {
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Treść (Edytor Wizualny)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Treść (Edytor Wizualny)</label>
                 <input type="hidden" name="content" value={content} />
                 <RichTextEditor
                     value={content}
@@ -164,9 +164,9 @@ export function NewsForm({ news }: { news?: any }) {
                     name="isHighlight"
                     id="isHighlight"
                     defaultChecked={news?.isHighlight}
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-indigo-600 focus:ring-indigo-600 dark:focus:ring-offset-gray-900"
                 />
-                <label htmlFor="isHighlight" className="text-sm font-medium text-gray-700">
+                <label htmlFor="isHighlight" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Wyróżnij na stronie głównej
                 </label>
             </div>
@@ -174,7 +174,7 @@ export function NewsForm({ news }: { news?: any }) {
             <button
                 type="submit"
                 disabled={isPending || uploading}
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 disabled:opacity-50 flex justify-center items-center gap-2"
+                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 disabled:opacity-50 flex justify-center items-center gap-2 transition-colors"
             >
                 {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 {isPending ? "Zapisywanie..." : "Zapisz Aktualność"}

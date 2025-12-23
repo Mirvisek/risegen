@@ -6,6 +6,22 @@ const withPWA = require('next-pwa')({
     // disable: process.env.NODE_ENV === 'development',
     runtimeCaching: [
         {
+            urlPattern: /\/api\/auth\/.*/i,
+            handler: 'NetworkOnly',
+        },
+        {
+            urlPattern: /\/admin\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+                cacheName: 'admin-pages',
+                expiration: {
+                    maxEntries: 16,
+                    maxAgeSeconds: 24 * 60 * 60 // 24 hours
+                },
+                networkTimeoutSeconds: 5
+            }
+        },
+        {
             urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
             handler: 'CacheFirst',
             options: {

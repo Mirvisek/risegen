@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
     BrandingForm,
@@ -56,8 +57,9 @@ interface AppearancePageTabsProps {
 type MainTab = "general" | "appearance" | "policies" | "config";
 
 export function AppearancePageTabs({ config, partners, slides, members, documents }: AppearancePageTabsProps) {
-    const [activeMainTab, setActiveMainTab] = useState<MainTab>("general");
-    const [activeSubTab, setActiveSubTab] = useState<string>("general-org");
+    const searchParams = useSearchParams();
+    const [activeMainTab, setActiveMainTab] = useState<MainTab>((searchParams.get("tab") as MainTab) || "general");
+    const [activeSubTab, setActiveSubTab] = useState<string>(searchParams.get("sub") || "general-org");
 
     const mainTabs = [
         { id: "general", label: "Ogólne", icon: Settings },
@@ -102,10 +104,10 @@ export function AppearancePageTabs({ config, partners, slides, members, document
     };
 
     return (
-        <div className="flex flex-col h-full bg-gray-50/50 rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+        <div className="flex flex-col h-full bg-gray-50/50 dark:bg-gray-900/50 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm transition-colors duration-300">
             {/* Main Tabs Header */}
-            <div className="bg-white border-b border-gray-200 px-6 pt-6">
-                <nav className="-mb-px flex space-x-8">
+            <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 sm:px-6 pt-4 sm:pt-6 shrink-0 z-20 transition-colors duration-300">
+                <nav className="-mb-px flex space-x-6 sm:space-x-8 overflow-x-auto scrollbar-hide pb-1">
                     {mainTabs.map((tab) => {
                         const Icon = tab.icon;
                         const isActive = activeMainTab === tab.id;
@@ -114,13 +116,13 @@ export function AppearancePageTabs({ config, partners, slides, members, document
                                 key={tab.id}
                                 onClick={() => handleMainTabChange(tab.id as MainTab)}
                                 className={cn(
-                                    "flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-all",
+                                    "flex items-center gap-2 py-3 sm:py-4 px-1 border-b-2 font-medium text-sm transition-all whitespace-nowrap",
                                     isActive
-                                        ? "border-indigo-600 text-indigo-600"
-                                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                                        ? "border-indigo-600 text-indigo-600 dark:text-indigo-400 dark:border-indigo-400"
+                                        : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700"
                                 )}
                             >
-                                <Icon className={cn("h-4 w-4", isActive ? "text-indigo-600" : "text-gray-400")} />
+                                <Icon className={cn("h-4 w-4", isActive ? "text-indigo-600 dark:text-indigo-400" : "text-gray-400 dark:text-gray-500")} />
                                 {tab.label}
                             </button>
                         );
@@ -128,10 +130,10 @@ export function AppearancePageTabs({ config, partners, slides, members, document
                 </nav>
             </div>
 
-            <div className="flex flex-1 overflow-hidden min-h-[700px]">
+            <div className="flex flex-col lg:flex-row flex-1 overflow-hidden min-h-[500px] sm:min-h-[700px]">
                 {/* Sub-tabs Sidebar */}
-                <aside className="w-64 bg-white border-r border-gray-200 p-4 space-y-1 overflow-y-auto shrink-0">
-                    <p className="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Sekcje</p>
+                <aside className="w-full lg:w-64 bg-white dark:bg-gray-900 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-800 p-3 lg:p-4 flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto shrink-0 z-10 scrollbar-hide lg:scrollbar-default transition-colors duration-300">
+                    <p className="hidden lg:block px-3 py-2 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Sekcje</p>
                     {subTabs[activeMainTab].map((tab) => {
                         const Icon = tab.icon;
                         const isActive = activeSubTab === tab.id;
@@ -140,22 +142,22 @@ export function AppearancePageTabs({ config, partners, slides, members, document
                                 key={tab.id}
                                 onClick={() => setActiveSubTab(tab.id)}
                                 className={cn(
-                                    "w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+                                    "flex-shrink-0 lg:flex-shrink lg:w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap",
                                     isActive
-                                        ? "bg-indigo-50 text-indigo-700 shadow-sm border border-indigo-100/50"
-                                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 border border-transparent"
+                                        ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 shadow-sm border border-indigo-100/50 dark:border-indigo-800/50"
+                                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200 border border-transparent"
                                 )}
                             >
-                                <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-indigo-600" : "text-gray-400")} />
-                                <span className="truncate">{tab.label}</span>
+                                <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-indigo-600 dark:text-indigo-400" : "text-gray-400 dark:text-gray-500")} />
+                                <span className="">{tab.label}</span>
                             </button>
                         );
                     })}
                 </aside>
 
                 {/* Content Area */}
-                <main className="flex-1 p-8 overflow-y-auto bg-white/40 backdrop-blur-sm">
-                    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <main className="flex-1 p-4 lg:p-8 overflow-y-auto bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm transition-colors duration-300">
+                    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-2 duration-300 space-y-6">
                         {/* Ogólne Content */}
                         {activeSubTab === "general-org" && <CompanyForm config={config} />}
                         {activeSubTab === "general-contact" && <ContactForm config={config} />}

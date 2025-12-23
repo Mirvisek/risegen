@@ -60,29 +60,29 @@ export function FAQManager({ initialFaqs }: { initialFaqs: FAQ[] }) {
                 </button>
             </div>
 
-            <div className="overflow-hidden bg-white shadow sm:rounded-lg border border-gray-200">
-                <ul className="divide-y divide-gray-200">
+            <div className="overflow-hidden bg-white dark:bg-gray-900 shadow sm:rounded-lg border border-gray-200 dark:border-gray-800 transition-colors">
+                <ul className="divide-y divide-gray-200 dark:divide-gray-800">
                     {faqs.map((faq) => (
-                        <li key={faq.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition">
+                        <li key={faq.id} className="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                             <div className="flex items-center gap-3">
-                                <span className="text-xs font-mono text-gray-400 bg-gray-100 px-2 py-1 rounded">
+                                <span className="text-xs font-mono text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
                                     {faq.order}
                                 </span>
                                 <div>
-                                    <p className="font-medium text-gray-900">{faq.question}</p>
-                                    <p className="text-sm text-gray-500 line-clamp-1">{faq.answer}</p>
+                                    <p className="font-medium text-gray-900 dark:text-white">{faq.question}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{faq.answer}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => handleEdit(faq)}
-                                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                                    className="p-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors"
                                 >
                                     <Edit className="h-4 w-4" />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(faq.id)}
-                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                    className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
                                 >
                                     <Trash2 className="h-4 w-4" />
                                 </button>
@@ -90,7 +90,7 @@ export function FAQManager({ initialFaqs }: { initialFaqs: FAQ[] }) {
                         </li>
                     ))}
                     {faqs.length === 0 && (
-                        <li className="p-8 text-center text-gray-500">
+                        <li className="p-8 text-center text-gray-500 dark:text-gray-400">
                             Brak pytań. Dodaj pierwsze pytanie!
                         </li>
                     )}

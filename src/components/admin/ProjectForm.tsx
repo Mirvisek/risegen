@@ -2,6 +2,7 @@
 
 import { useState, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { Loader2, Upload, X, Check } from "lucide-react";
 import Image from "next/image";
 import { AttachmentsManager, Attachment } from "@/components/admin/AttachmentsManager";
@@ -25,6 +26,7 @@ export function ProjectForm({ project }: { project?: any }) {
     const [description, setDescription] = useState(project?.description || "");
     const [uploading, setUploading] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const { resolvedTheme } = useTheme();
 
     useEffect(() => {
         setMounted(true);
@@ -128,43 +130,43 @@ export function ProjectForm({ project }: { project?: any }) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl bg-white p-6 rounded-xl shadow-sm border animate-in fade-in duration-500">
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 animate-in fade-in duration-500 transition-colors">
             {success && (
-                <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-md flex items-center gap-3">
-                    <Check className="h-5 w-5 text-green-400" />
-                    <p className="text-sm text-green-700 font-medium">Projekt został zapisany pomyślnie! Przekierowywanie...</p>
+                <div className="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-400 dark:border-green-500 p-4 rounded-md flex items-center gap-3">
+                    <Check className="h-5 w-5 text-green-400 dark:text-green-500" />
+                    <p className="text-sm text-green-700 dark:text-green-300 font-medium">Projekt został zapisany pomyślnie! Przekierowywanie...</p>
                 </div>
             )}
             {error && <div className="text-red-500">{error}</div>}
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Tytuł</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Tytuł</label>
                 <input
                     name="title"
                     defaultValue={project?.title}
                     onChange={handleTitleChange}
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 text-black"
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 text-gray-900 dark:text-white bg-white dark:bg-gray-800 transition-colors"
                 />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Slug (URL)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Slug (URL)</label>
                 <input
                     name="slug"
                     value={slug}
                     onChange={handleSlugChange}
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-gray-50 text-black"
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-gray-50 dark:bg-gray-800/50 text-gray-900 dark:text-white transition-colors"
                 />
-                <p className="text-xs text-gray-500 mt-1">Automatycznie generowany z tytułu, ale możesz go zmienić.</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Automatycznie generowany z tytułu, ale możesz go zmienić.</p>
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Zdjęcia</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Zdjęcia</label>
                 <div className="mt-2 grid grid-cols-3 gap-4 mb-4">
                     {images.map((url, index) => (
-                        <div key={index} className="relative group aspect-video bg-gray-100 rounded-lg overflow-hidden border">
+                        <div key={index} className="relative group aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                             <Image src={url} alt="Project image" fill className="object-cover" />
                             <button
                                 type="button"
@@ -177,20 +179,20 @@ export function ProjectForm({ project }: { project?: any }) {
                     ))}
                 </div>
                 <div className="flex items-center gap-4">
-                    <label className="cursor-pointer bg-white border border-gray-300 rounded-md px-4 py-2 flex items-center gap-2 hover:bg-gray-50 transition shadow-sm text-sm font-medium text-gray-700">
+                    <label className="cursor-pointer bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300">
                         {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                         {uploading ? "Wysyłanie..." : "Dodaj Zdjęcie"}
                         <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploading} />
                     </label>
                     <div className="flex flex-col">
-                        <span className="text-xs text-gray-500">JPG, PNG, WEBP. Maks. 10MB.</span>
-                        <span className="text-xs text-gray-400">Rekomendowane: 1200x630px (16:9)</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">JPG, PNG, WEBP. Maks. 10MB.</span>
+                        <span className="text-xs text-gray-400 dark:text-gray-500">Rekomendowane: 1200x630px (16:9)</span>
                     </div>
                 </div>
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Załączone Dokumenty</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Załączone Dokumenty</label>
                 <AttachmentsManager
                     attachments={documents}
                     onChange={setDocuments}
@@ -198,9 +200,9 @@ export function ProjectForm({ project }: { project?: any }) {
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Krótki Opis</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Krótki Opis</label>
                 {mounted ? (
-                    <div data-color-mode="light">
+                    <div data-color-mode={resolvedTheme === "dark" ? "dark" : "light"}>
                         <MDEditor
                             value={description}
                             onChange={(val) => setDescription(val || "")}
@@ -212,17 +214,17 @@ export function ProjectForm({ project }: { project?: any }) {
                         />
                     </div>
                 ) : (
-                    <div className="border border-gray-300 rounded-md p-4 bg-gray-50 h-[200px] flex items-center justify-center">
+                    <div className="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-800 h-[200px] flex items-center justify-center">
                         <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                     </div>
                 )}
-                <p className="text-xs text-gray-500 mt-2">Krótki opis wyświetlany na liście projektów i w meta description.</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Krótki opis wyświetlany na liście projektów i w meta description.</p>
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Treść (Edytor Markdown)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Treść (Edytor Markdown)</label>
                 {mounted ? (
-                    <div data-color-mode="light">
+                    <div data-color-mode={resolvedTheme === "dark" ? "dark" : "light"}>
                         <MDEditor
                             value={content}
                             onChange={(val) => setContent(val || "")}
@@ -234,20 +236,20 @@ export function ProjectForm({ project }: { project?: any }) {
                         />
                     </div>
                 ) : (
-                    <div className="border border-gray-300 rounded-md p-4 bg-gray-50 h-[500px] flex items-center justify-center">
+                    <div className="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-gray-50 dark:bg-gray-800 h-[500px] flex items-center justify-center">
                         <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                     </div>
                 )}
-                <p className="text-xs text-gray-500 mt-2">Pełna treść projektu w formacie Markdown.</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Pełna treść projektu w formacie Markdown.</p>
             </div>
 
             <div>
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status Projektu</label>
+                <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Status Projektu</label>
                 <select
                     name="status"
                     id="status"
                     defaultValue={project?.status || "CURRENT"}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-white text-black"
+                    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
                 >
                     <option value="CURRENT">Aktualne</option>
                     <option value="COMPLETED">Zrealizowane</option>
@@ -255,14 +257,14 @@ export function ProjectForm({ project }: { project?: any }) {
             </div>
 
             <div className="flex items-center gap-2">
-                <input type="checkbox" name="isHighlight" id="isHighlight" defaultChecked={project?.isHighlight} className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" />
-                <label htmlFor="isHighlight" className="text-sm font-medium text-gray-700">Wyróżnij na stronie głównej</label>
+                <input type="checkbox" name="isHighlight" id="isHighlight" defaultChecked={project?.isHighlight} className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-indigo-600 focus:ring-indigo-600 dark:focus:ring-offset-gray-900" />
+                <label htmlFor="isHighlight" className="text-sm font-medium text-gray-700 dark:text-gray-300">Wyróżnij na stronie głównej</label>
             </div>
 
             <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 disabled:opacity-50"
+                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 disabled:opacity-50 transition-colors"
             >
                 {loading ? "Zapisywanie..." : "Zapisz Projekt"}
             </button>

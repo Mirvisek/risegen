@@ -22,7 +22,7 @@ export function DeleteNewsButton({ id }: { id: string }) {
         <>
             <button
                 type="button"
-                className="text-red-600 hover:text-red-900 p-1 transition"
+                className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1 transition-colors"
                 onClick={() => setIsOpen(true)}
                 title="Usuń aktualność"
             >

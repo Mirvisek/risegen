@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X, ChevronDown, Facebook, Instagram } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./ThemeToggle";
+import { motion } from "framer-motion";
 
 interface NavbarProps {
     config?: {
@@ -44,7 +46,7 @@ export function Navbar({ config }: NavbarProps) {
     if (pathname.startsWith("/admin") || pathname.startsWith("/auth")) return null;
 
     return (
-        <nav className="bg-white shadow relative z-50">
+        <nav className="bg-white dark:bg-gray-950 shadow dark:border-b dark:border-gray-800 relative z-50 transition-colors duration-300">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 justify-between">
                     <div className="flex">
@@ -58,7 +60,7 @@ export function Navbar({ config }: NavbarProps) {
                                         </div>
                                     </div>
                                 ) : (
-                                    <span className="text-2xl font-black text-indigo-600 tracking-tighter">
+                                    <span className="text-2xl font-black text-indigo-600 dark:text-indigo-400 tracking-tighter">
                                         {config?.siteName || "RiseGen"}
                                     </span>
                                 )}
@@ -66,6 +68,8 @@ export function Navbar({ config }: NavbarProps) {
                         </div>
                         <div className="hidden xl:ml-6 xl:flex xl:space-x-8">
                             {staticNavigation.map((item) => {
+                                const isActive = pathname === item.href || (item.children && item.children.some(child => pathname === child.href));
+
                                 if (item.children) {
                                     return (
                                         <div
@@ -77,18 +81,25 @@ export function Navbar({ config }: NavbarProps) {
                                             <Link
                                                 href={item.href}
                                                 className={cn(
-                                                    "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-bold transition-all h-full focus:outline-none",
-                                                    (pathname === item.href || item.children.some(child => pathname === child.href))
-                                                        ? "border-indigo-600 text-gray-900"
-                                                        : "border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-900"
+                                                    "relative inline-flex items-center px-1 pt-1 text-sm font-bold transition-colors h-full focus:outline-none",
+                                                    isActive
+                                                        ? "text-gray-900 dark:text-white"
+                                                        : "text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                                                 )}
                                             >
                                                 {item.name}
                                                 <ChevronDown className="ml-1 h-4 w-4" />
+                                                {isActive && (
+                                                    <motion.div
+                                                        layoutId="navbar-indicator"
+                                                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 dark:bg-indigo-400"
+                                                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                                                    />
+                                                )}
                                             </Link>
 
                                             {hoveredItem === item.name && (
-                                                <div className="absolute left-0 top-full -mt-1 w-64 bg-white shadow-2xl rounded-b-2xl z-50 animate-in fade-in slide-in-from-top-3 duration-300 border border-gray-100">
+                                                <div className="absolute left-0 top-full -mt-1 w-64 bg-white dark:bg-gray-900 shadow-2xl rounded-b-2xl z-50 animate-in fade-in slide-in-from-top-3 duration-300 border border-gray-100 dark:border-gray-800">
                                                     <div className="py-2">
                                                         {item.children.map((child) => (
                                                             <Link
@@ -97,8 +108,8 @@ export function Navbar({ config }: NavbarProps) {
                                                                 className={cn(
                                                                     "block px-4 py-3 text-sm font-medium transition-colors",
                                                                     pathname === child.href
-                                                                        ? "bg-indigo-50 text-indigo-600 font-bold"
-                                                                        : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                                                                        ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-bold"
+                                                                        : "text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400"
                                                                 )}
                                                                 onClick={() => setHoveredItem(null)}
                                                             >
@@ -117,13 +128,20 @@ export function Navbar({ config }: NavbarProps) {
                                         key={item.href}
                                         href={item.href}
                                         className={cn(
-                                            "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-bold transition-all h-full",
-                                            pathname === item.href
-                                                ? "border-indigo-600 text-gray-900"
-                                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                                            "relative inline-flex items-center px-1 pt-1 text-sm font-bold transition-colors h-full",
+                                            isActive
+                                                ? "text-gray-900 dark:text-white"
+                                                : "text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white"
                                         )}
                                     >
                                         {item.name}
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="navbar-indicator"
+                                                className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 dark:bg-indigo-400"
+                                                transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                                            />
+                                        )}
                                     </Link>
                                 );
                             })}
@@ -132,22 +150,27 @@ export function Navbar({ config }: NavbarProps) {
 
                     <div className="flex items-center gap-2">
                         <div className="hidden xl:flex xl:items-center xl:gap-4 xl:ml-2">
+                            {/* ... social icons ... */}
                             {config?.facebookUrl && (
-                                <Link href={config.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-indigo-600 transition transform hover:scale-110">
+                                <Link href={config.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition transform hover:scale-110">
                                     <Facebook className="h-5 w-5" />
                                 </Link>
                             )}
                             {config?.instagramUrl && (
-                                <Link href={config.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-600 transition transform hover:scale-110">
+                                <Link href={config.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-600 dark:hover:text-pink-400 transition transform hover:scale-110">
                                     <Instagram className="h-5 w-5" />
                                 </Link>
                             )}
+                            <div className="border-l pl-4 border-gray-200 dark:border-gray-700 h-6 flex items-center ml-2">
+                                <ThemeToggle />
+                            </div>
                         </div>
 
-                        <div className="-mr-2 flex items-center xl:hidden">
+                        <div className="-mr-2 flex items-center gap-2 xl:hidden">
+                            <ThemeToggle />
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
-                                className="inline-flex items-center justify-center rounded-lg p-2 text-gray-500 hover:bg-gray-100 transition"
+                                className="inline-flex items-center justify-center rounded-lg p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                             >
                                 <span className="sr-only">Open main menu</span>
                                 {isOpen ? (
@@ -161,7 +184,7 @@ export function Navbar({ config }: NavbarProps) {
                 </div>
             </div>
 
-            <div className={cn("xl:hidden bg-white border-t transition-all duration-300", isOpen ? "max-h-[100vh] opacity-100 pb-6 pt-2" : "max-h-0 opacity-0 overflow-hidden")}>
+            <div className={cn("xl:hidden bg-white dark:bg-gray-950 border-t dark:border-gray-800 transition-all duration-300", isOpen ? "max-h-[100vh] opacity-100 pb-6 pt-2" : "max-h-0 opacity-0 overflow-hidden")}>
                 <div className="space-y-1 px-4">
                     {staticNavigation.map((item) => {
                         if (item.children) {
@@ -172,19 +195,19 @@ export function Navbar({ config }: NavbarProps) {
                                         className={cn(
                                             "w-full flex justify-between items-center py-2 text-lg font-bold transition-colors",
                                             (pathname === item.href || item.children.some(child => pathname === child.href))
-                                                ? "text-indigo-600"
-                                                : "text-gray-900"
+                                                ? "text-indigo-600 dark:text-indigo-400"
+                                                : "text-gray-900 dark:text-gray-100"
                                         )}
                                     >
                                         {item.name}
                                         <ChevronDown className={cn("h-5 w-5 transition-transform", hoveredItem === item.name ? "rotate-180" : "")} />
                                     </button>
-                                    <div className={cn("mt-2 pl-4 space-y-2 border-l-2 border-indigo-100", hoveredItem === item.name ? "block" : "hidden")}>
+                                    <div className={cn("mt-2 pl-4 space-y-2 border-l-2 border-indigo-100 dark:border-gray-800", hoveredItem === item.name ? "block" : "hidden")}>
                                         <Link
                                             href={item.href}
                                             className={cn(
                                                 "block py-2 text-base font-bold transition-colors",
-                                                pathname === item.href ? "text-indigo-600" : "text-gray-600 hover:text-indigo-600"
+                                                pathname === item.href ? "text-indigo-600 dark:text-indigo-400" : "text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
                                             )}
                                             onClick={() => setIsOpen(false)}
                                         >
@@ -196,7 +219,7 @@ export function Navbar({ config }: NavbarProps) {
                                                 href={child.href}
                                                 className={cn(
                                                     "block py-2 text-base font-medium transition-colors",
-                                                    pathname === child.href ? "text-indigo-600" : "text-gray-600 hover:text-indigo-600"
+                                                    pathname === child.href ? "text-indigo-600 dark:text-indigo-400" : "text-gray-600 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400"
                                                 )}
                                                 onClick={() => setIsOpen(false)}
                                             >
@@ -214,7 +237,7 @@ export function Navbar({ config }: NavbarProps) {
                                 href={item.href}
                                 className={cn(
                                     "block py-3 text-lg font-bold transition-colors",
-                                    pathname === item.href ? "text-indigo-600" : "text-gray-900"
+                                    pathname === item.href ? "text-indigo-600 dark:text-indigo-400" : "text-gray-900 dark:text-gray-100"
                                 )}
                                 onClick={() => setIsOpen(false)}
                             >

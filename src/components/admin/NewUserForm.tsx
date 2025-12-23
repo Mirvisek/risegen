@@ -46,38 +46,38 @@ export function NewUserForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 max-w-md bg-white p-6 rounded-xl shadow-sm border">
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-md bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
             {error && <div className="text-red-500">{error}</div>}
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Nazwa wyświetlana</label>
-                <input name="name" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" />
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nazwa wyświetlana</label>
+                <input name="name" required className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors" />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Email</label>
-                <input name="email" type="email" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" />
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                <input name="email" type="email" required className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors" />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Hasło tymczasowe</label>
-                <input name="password" type="password" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" />
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Hasło tymczasowe</label>
+                <input name="password" type="password" required className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors" />
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                <div className="space-y-2 border p-3 rounded-md">
-                    <label className="flex items-center space-x-2">
-                        <input type="checkbox" name="roles" value="ADMIN" className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                        <span className="text-sm text-gray-700">Administrator (All except settings)</span>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role</label>
+                <div className="space-y-2 border border-gray-200 dark:border-gray-700 p-3 rounded-md bg-gray-50 dark:bg-gray-800/50">
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" name="roles" value="ADMIN" className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500 dark:bg-gray-700 dark:checked:bg-indigo-600 dark:focus:ring-offset-gray-900" />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">Administrator (All except settings)</span>
                     </label>
-                    <label className="flex items-center space-x-2">
-                        <input type="checkbox" name="roles" value="REDAKTOR" className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                        <span className="text-sm text-gray-700">Redaktor (News & Projects)</span>
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" name="roles" value="REDAKTOR" className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500 dark:bg-gray-700 dark:checked:bg-indigo-600 dark:focus:ring-offset-gray-900" />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">Redaktor (News & Projects)</span>
                     </label>
-                    <label className="flex items-center space-x-2">
-                        <input type="checkbox" name="roles" value="REKRUTER" className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                        <span className="text-sm text-gray-700">Rekruter (Applications)</span>
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" name="roles" value="REKRUTER" className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500 dark:bg-gray-700 dark:checked:bg-indigo-600 dark:focus:ring-offset-gray-900" />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">Rekruter (Applications)</span>
                     </label>
                     <p className="text-xs text-gray-500 mt-2">
                         * SuperAdmin (admin@risegen.pl) jest przypisywany automatycznie.

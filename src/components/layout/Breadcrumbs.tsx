@@ -15,11 +15,11 @@ interface BreadcrumbsProps {
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
     return (
         <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="flex items-center space-x-2 text-sm text-gray-500">
+            <ol className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
                 <li>
                     <Link
                         href="/"
-                        className="hover:text-indigo-600 transition flex items-center gap-1"
+                        className="hover:text-indigo-600 dark:hover:text-indigo-400 transition flex items-center gap-1"
                         aria-label="Strona główna"
                     >
                         <Home className="h-4 w-4" />
@@ -32,10 +32,10 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
 
                     return (
                         <li key={index} className="flex items-center space-x-2">
-                            <ChevronRight className="h-4 w-4 text-gray-400" />
+                            <ChevronRight className="h-4 w-4 text-gray-400 dark:text-gray-600" />
                             {isLast || !item.href ? (
                                 <span
-                                    className="font-medium text-gray-900"
+                                    className="font-medium text-gray-900 dark:text-gray-200"
                                     aria-current="page"
                                 >
                                     {item.label}
@@ -43,7 +43,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                             ) : (
                                 <Link
                                     href={item.href}
-                                    className="hover:text-indigo-600 transition"
+                                    className="hover:text-indigo-600 dark:hover:text-indigo-400 transition"
                                 >
                                     {item.label}
                                 </Link>

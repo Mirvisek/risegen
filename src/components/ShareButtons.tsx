@@ -1,7 +1,7 @@
 "use client";
 
 import { Share2, Facebook, Twitter, Linkedin, Link as LinkIcon, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface ShareButtonsProps {
     title: string;
@@ -10,7 +10,13 @@ interface ShareButtonsProps {
 
 export function ShareButtons({ title, url }: ShareButtonsProps) {
     const [copied, setCopied] = useState(false);
-    const shareUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
+    const [shareUrl, setShareUrl] = useState(url || "");
+
+    useEffect(() => {
+        if (!url && typeof window !== 'undefined') {
+            setShareUrl(window.location.href);
+        }
+    }, [url]);
 
     const shareLinks = {
         facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
@@ -29,10 +35,10 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
     };
 
     return (
-        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-800 transition-colors">
             <div className="flex items-center gap-2 mb-3">
-                <Share2 className="h-4 w-4 text-gray-600" />
-                <span className="text-sm font-medium text-gray-700">Udostępnij</span>
+                <Share2 className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Udostępnij</span>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -71,7 +77,7 @@ export function ShareButtons({ title, url }: ShareButtonsProps) {
 
                 <button
                     onClick={copyToClipboard}
-                    className="flex items-center gap-2 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm"
+                    className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition text-sm"
                     aria-label="Skopiuj link"
                 >
                     {copied ? (

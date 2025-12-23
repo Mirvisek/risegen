@@ -24,7 +24,7 @@ export function DeleteDocumentButton({ id }: { id: string }) {
             <button
                 onClick={() => setIsOpen(true)}
                 disabled={isPending}
-                className="text-red-600 hover:text-red-900 p-1"
+                className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1 transition-colors"
             >
                 {isPending ? <Loader2 className="animate-spin h-4 w-4" /> : <Trash2 className="h-4 w-4" />}
             </button>

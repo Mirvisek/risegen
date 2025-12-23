@@ -1,4 +1,4 @@
-import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { AdminShell } from "@/components/admin/AdminShell";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 
 export const metadata = {
@@ -15,12 +15,9 @@ export default function AdminLayout({
 }) {
     return (
         <AuthProvider>
-            <div className="flex bg-gray-100 min-h-screen">
-                <AdminSidebar />
-                <main className="ml-64 flex-1 p-8 overflow-y-auto h-screen">
-                    {children}
-                </main>
-            </div>
+            <AdminShell>
+                {children}
+            </AdminShell>
         </AuthProvider>
     );
 }

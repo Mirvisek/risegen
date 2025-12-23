@@ -79,9 +79,9 @@ export function TeamManager({ members }: { members: TeamMember[] }) {
                 </div>
             )}
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <h3 className="text-lg font-medium text-gray-900">Lista Członków Zespołu</h3>
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden transition-colors">
+                <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">Lista Członków Zespołu</h3>
 
                     <div className="flex flex-wrap gap-2">
                         {categories.map((cat) => (
@@ -89,8 +89,8 @@ export function TeamManager({ members }: { members: TeamMember[] }) {
                                 key={cat.label}
                                 href={cat.id ? `?tab=team&category=${cat.id}` : "?tab=team"}
                                 className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${(!categoryFilter && !cat.id) || categoryFilter === cat.id
-                                    ? "bg-indigo-100 text-indigo-700"
-                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                    ? "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
                                     }`}
                             >
                                 {cat.label}
@@ -98,11 +98,11 @@ export function TeamManager({ members }: { members: TeamMember[] }) {
                         ))}
                     </div>
                 </div>
-                <ul role="list" className="divide-y divide-gray-200">
+                <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-800">
                     {filteredMembers.map((member) => (
-                        <li key={member.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50">
+                        <li key={member.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                             <div className="flex items-center gap-4">
-                                <div className="h-12 w-12 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 relative flex items-center justify-center">
+                                <div className="h-12 w-12 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0 relative flex items-center justify-center border border-gray-200 dark:border-gray-700">
                                     {member.image ? (
                                         <Image src={member.image} alt={member.name} fill className="object-cover" />
                                     ) : (
@@ -110,8 +110,8 @@ export function TeamManager({ members }: { members: TeamMember[] }) {
                                     )}
                                 </div>
                                 <div>
-                                    <p className="text-sm font-medium text-gray-900">{member.name}</p>
-                                    <p className="text-sm text-gray-500">{member.role} <span className="text-xs text-gray-400">• {(() => {
+                                    <p className="text-sm font-medium text-gray-900 dark:text-white">{member.name}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">{member.role} <span className="text-xs text-gray-400 dark:text-gray-500">• {(() => {
                                         try {
                                             const cats = JSON.parse(member.categories);
                                             return Array.isArray(cats) ? cats.map((c: string) => categoryLabels[c] || c).join(", ") : "";
@@ -120,7 +120,7 @@ export function TeamManager({ members }: { members: TeamMember[] }) {
                                 </div>
                             </div>
                             <div className="flex items-center gap-4">
-                                <span className="text-xs text-gray-400">Sort: {member.order}</span>
+                                <span className="text-xs text-gray-400 dark:text-gray-500">Sort: {member.order}</span>
                                 <button
                                     onClick={() => {
                                         setEditingMember(member);
@@ -128,7 +128,7 @@ export function TeamManager({ members }: { members: TeamMember[] }) {
                                         // Scroll to form?
                                         window.scrollTo({ top: 0, behavior: "smooth" });
                                     }}
-                                    className="p-2 text-gray-400 hover:text-indigo-600 transition-colors"
+                                    className="p-2 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                                     title="Edytuj"
                                 >
                                     <Pencil className="h-4 w-4" />
@@ -138,7 +138,7 @@ export function TeamManager({ members }: { members: TeamMember[] }) {
                         </li>
                     ))}
                     {filteredMembers.length === 0 && (
-                        <li className="px-6 py-8 text-center text-gray-500">Brak członków zespołu w tej kategorii.</li>
+                        <li className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">Brak członków zespołu w tej kategorii.</li>
                     )}
                 </ul>
             </div>

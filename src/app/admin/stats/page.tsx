@@ -9,12 +9,12 @@ export default async function AdminStatsPage() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900">Licznik Sukcesów ({stats.length})</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Licznik Sukcesów ({stats.length})</h1>
             </div>
 
-            <div className="bg-white shadow sm:rounded-lg border border-gray-200 p-6">
-                <p className="font-bold text-gray-900 mb-2">Jak to działa?</p>
-                <p className="text-sm text-gray-600">Te statystyki są wyświetlane na stronie głównej (jeśli są włączone) w formie efektownego licznika. Możesz tu wpisać np. liczbę projektów, członków lub godzin wolontariatu.</p>
+            <div className="bg-white dark:bg-gray-900 shadow sm:rounded-lg border border-gray-200 dark:border-gray-800 p-6">
+                <p className="font-bold text-gray-900 dark:text-white mb-2">Jak to działa?</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Te statystyki są wyświetlane na stronie głównej (jeśli są włączone) w formie efektownego licznika. Możesz tu wpisać np. liczbę projektów, członków lub godzin wolontariatu.</p>
             </div>
 
             <StatsManager initialStats={stats} />

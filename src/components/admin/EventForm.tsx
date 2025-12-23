@@ -2,6 +2,7 @@
 
 import { useState, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { Loader2, Upload, X, Check, Calendar as CalendarIcon, MapPin } from "lucide-react";
 import Image from "next/image";
 import { AttachmentsManager, Attachment } from "@/components/admin/AttachmentsManager";
@@ -26,6 +27,7 @@ export function EventForm({ event }: { event?: any }) {
     const [eventDate, setEventDate] = useState(event?.date ? new Date(event.date).toISOString().slice(0, 16) : "");
     const [uploading, setUploading] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const { resolvedTheme } = useTheme();
 
     useEffect(() => {
         setMounted(true);
@@ -102,7 +104,7 @@ export function EventForm({ event }: { event?: any }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 animate-in fade-in duration-500">
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 animate-in fade-in duration-500 transition-colors">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                     <div>
@@ -112,7 +114,7 @@ export function EventForm({ event }: { event?: any }) {
                             defaultValue={event?.title}
                             onChange={handleTitleChange}
                             required
-                            className="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-colors"
                         />
                     </div>
 
@@ -123,7 +125,7 @@ export function EventForm({ event }: { event?: any }) {
                             value={slug}
                             onChange={(e) => setSlug(e.target.value)}
                             required
-                            className="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-colors"
                         />
                     </div>
                 </div>
@@ -138,7 +140,7 @@ export function EventForm({ event }: { event?: any }) {
                             value={eventDate}
                             onChange={(e) => setEventDate(e.target.value)}
                             required
-                            className="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-colors"
                         />
                     </div>
 
@@ -150,7 +152,7 @@ export function EventForm({ event }: { event?: any }) {
                             name="location"
                             defaultValue={event?.location}
                             placeholder="Np. Rynek Główny, Kraków"
-                            className="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+                            className="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 focus:ring-2 focus:ring-indigo-500 transition-colors"
                         />
                     </div>
                 </div>
@@ -182,7 +184,7 @@ export function EventForm({ event }: { event?: any }) {
             <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Opis Wydarzenia (Markdown)</label>
                 {mounted ? (
-                    <div data-color-mode="light">
+                    <div data-color-mode={resolvedTheme === "dark" ? "dark" : "light"}>
                         <MDEditor
                             value={content}
                             onChange={(val) => setContent(val || "")}

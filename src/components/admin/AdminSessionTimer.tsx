@@ -91,21 +91,21 @@ export function AdminSessionTimer() {
     const isWarning = timeLeft < 60 * 1000; // Less than 1 minute
 
     return (
-        <div className="px-4 py-3 bg-gray-900 border-t border-gray-800">
-            <div className="flex flex-col space-y-2 text-xs text-gray-400">
+        <div className="px-4 py-3 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 transition-colors">
+            <div className="flex flex-col space-y-2 text-xs text-gray-500 dark:text-gray-400">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Clock className="h-3 w-3" />
                         <span>Czas trwania:</span>
                     </div>
-                    <span className="font-mono text-gray-300">{formatTime(duration)}</span>
+                    <span className="font-mono text-gray-700 dark:text-gray-300">{formatTime(duration)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Hourglass className="h-3 w-3" />
                         <span>Wygasa za:</span>
                     </div>
-                    <span className={`font-mono font-bold ${isWarning ? 'text-red-500 animate-pulse' : 'text-green-500'}`}>
+                    <span className={`font-mono font-bold ${isWarning ? 'text-red-600 dark:text-red-500 animate-pulse' : 'text-green-600 dark:text-green-500'}`}>
                         {formatTime(timeLeft)}
                     </span>
                 </div>

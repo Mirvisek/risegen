@@ -86,6 +86,10 @@ import { redirect } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+
+// ... existing imports
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -118,57 +122,78 @@ export default async function RootLayout({
   const showNavigation = !isMaintenancePage;
 
   return (
-    <html lang="pl">
-      <head></head>
-      <body
-        className={`${poppins.variable} font-sans antialiased min-h-screen flex flex-col bg-white text-gray-900`}
-      >
-        <SkipToContent />
-
-        {/* JSON-LD Structured Data */}
+    <html lang="pl" suppressHydrationWarning>
+      <head>
         <script
-          type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": config?.siteName || "RiseGen",
-              "url": "https://risegen.pl",
-              "logo": config?.logoUrl ? `https://risegen.pl${config.logoUrl}` : "https://risegen.pl/logo.png",
-              "description": config?.seoDescription || "Stowarzyszenie RiseGen - Wspieramy rozwój i innowacje",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": config?.orgAddress || "",
-                "addressCountry": "PL"
-              },
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": config?.phone,
-                "contactType": "customer service"
-              },
-              "sameAs": [
-                config?.facebookUrl,
-                config?.instagramUrl,
-                config?.tiktokUrl
-              ].filter(Boolean)
-            })
+            __html: `
+              try {
+                const theme = localStorage.getItem('risegen-ui-theme') || 'system';
+                const root = document.documentElement;
+                
+                if (theme === 'system') {
+                  const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  root.classList.add(systemTheme);
+                } else {
+                  root.classList.add(theme);
+                }
+              } catch (e) {}
+            `,
           }}
         />
+      </head>
+      <body
+        suppressHydrationWarning
+        className={`${poppins.variable} font-sans antialiased min-h-screen flex flex-col bg-white text-gray-900 transition-colors duration-300 dark:bg-gray-950 dark:text-gray-50`}
+      >
+        <ThemeProvider>
+          <SkipToContent />
 
-        <GoogleAnalytics gaId={config?.googleAnalyticsId} />
-        <Toaster position="top-center" richColors />
-        {showNavigation && <Navbar config={config} />}
-        <main id="main-content" className="flex-1">
-          {children}
-        </main>
-        {showNavigation && (
-          <HideInAdmin>
-            <Footer config={config} />
-            <WcagWidget />
-            <CookieBanner />
-            <ScrollToTop />
-          </HideInAdmin>
-        )}
+          {/* JSON-LD Structured Data */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": config?.siteName || "RiseGen",
+                "url": "https://risegen.pl",
+                "logo": config?.logoUrl ? `https://risegen.pl${config.logoUrl}` : "https://risegen.pl/logo.png",
+                "description": config?.seoDescription || "Stowarzyszenie RiseGen - Wspieramy rozwój i innowacje",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": config?.orgAddress || "",
+                  "addressCountry": "PL"
+                },
+                "contactPoint": {
+                  "@type": "ContactPoint",
+                  "telephone": config?.phone,
+                  "contactType": "customer service"
+                },
+                "sameAs": [
+                  config?.facebookUrl,
+                  config?.instagramUrl,
+                  config?.tiktokUrl
+                ].filter(Boolean)
+              })
+            }}
+          />
+
+          <GoogleAnalytics gaId={config?.googleAnalyticsId} />
+          <Toaster position="top-center" richColors />
+          {showNavigation && <Navbar config={config} />}
+          <main id="main-content" className="flex-1">
+            {children}
+          </main>
+          {showNavigation && (
+            <HideInAdmin>
+              <Footer config={config} />
+              <WcagWidget />
+              <CookieBanner />
+              <ScrollToTop />
+            </HideInAdmin>
+          )}
+        </ThemeProvider>
       </body>
     </html>
   );

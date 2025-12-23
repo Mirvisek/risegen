@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import ReactMarkdown from "react-markdown";
-import { FaqAccordion } from "@/components/FaqAccordion";
 
 export const metadata = {
     title: "O Nas - RiseGen",
@@ -12,22 +11,22 @@ export default async function AboutPage() {
     return (
         <div className="container mx-auto px-4 py-16 max-w-4xl space-y-12 animate-in fade-in slide-in-from-bottom-5 duration-700">
             <div className="text-center space-y-4">
-                <h1 className="text-4xl font-bold text-gray-900">O Stowarzyszeniu</h1>
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white">O Stowarzyszeniu</h1>
                 <div className="w-20 h-1 bg-indigo-600 mx-auto rounded-full"></div>
             </div>
 
-            <div className="prose prose-lg mx-auto text-gray-600">
+            <div className="prose prose-lg mx-auto text-gray-600 dark:text-gray-400 dark:prose-invert">
                 {config?.aboutUsText ? (
                     <ReactMarkdown
                         components={{
-                            h1: ({ node, ...props }) => <h1 className="text-3xl font-bold text-gray-900 mt-6 mb-4" {...props} />,
-                            h2: ({ node, ...props }) => <h2 className="text-2xl font-bold text-gray-900 mt-5 mb-3" {...props} />,
-                            h3: ({ node, ...props }) => <h3 className="text-xl font-semibold text-gray-900 mt-4 mb-2" {...props} />,
+                            h1: ({ node, ...props }) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mt-6 mb-4" {...props} />,
+                            h2: ({ node, ...props }) => <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-5 mb-3" {...props} />,
+                            h3: ({ node, ...props }) => <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-4 mb-2" {...props} />,
                             p: ({ node, ...props }) => <p className="mb-4 leading-relaxed" {...props} />,
                             ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-4 space-y-2" {...props} />,
                             ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-4 space-y-2" {...props} />,
                             li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
-                            strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900" {...props} />,
+                            strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900 dark:text-white" {...props} />,
                         }}
                     >
                         {config.aboutUsText}
@@ -47,7 +46,7 @@ export default async function AboutPage() {
                     </>
                 )}
 
-                <h3 className="text-gray-900">Nasze Cele</h3>
+                <h3 className="text-gray-900 dark:text-white">Nasze Cele</h3>
                 {config?.aboutUsGoals ? (
                     <ReactMarkdown
                         components={{
@@ -68,18 +67,18 @@ export default async function AboutPage() {
                     </ul>
                 )}
 
-                <h3 className="text-gray-900">Dołącz do nas</h3>
+                <h3 className="text-gray-900 dark:text-white">Dołącz do nas</h3>
                 {config?.aboutUsJoinText ? (
                     <ReactMarkdown
                         components={{
-                            h1: ({ node, ...props }) => <h1 className="text-3xl font-bold text-gray-900 mt-6 mb-4" {...props} />,
-                            h2: ({ node, ...props }) => <h2 className="text-2xl font-bold text-gray-900 mt-5 mb-3" {...props} />,
-                            h3: ({ node, ...props }) => <h3 className="text-xl font-semibold text-gray-900 mt-4 mb-2" {...props} />,
+                            h1: ({ node, ...props }) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mt-6 mb-4" {...props} />,
+                            h2: ({ node, ...props }) => <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-5 mb-3" {...props} />,
+                            h3: ({ node, ...props }) => <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-4 mb-2" {...props} />,
                             p: ({ node, ...props }) => <p className="mb-4 leading-relaxed" {...props} />,
                             ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-4 space-y-2" {...props} />,
                             ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-4 space-y-2" {...props} />,
                             li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
-                            strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900" {...props} />,
+                            strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900 dark:text-white" {...props} />,
                         }}
                     >
                         {config.aboutUsJoinText}

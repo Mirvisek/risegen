@@ -22,7 +22,7 @@ export function DeleteProjectButton({ projectId }: { projectId: string }) {
         <>
             <button
                 type="button"
-                className="p-2 text-red-400 hover:text-red-500 transition"
+                className="p-2 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors"
                 onClick={() => setIsOpen(true)}
                 title="Usuń projekt"
             >

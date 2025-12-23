@@ -78,70 +78,70 @@ export function EditUserForm({ user }: EditUserFormProps) {
     return (
         <div className="space-y-6 max-w-2xl">
             <div className="flex items-center gap-4">
-                <Link href="/admin/users" className="text-gray-500 hover:text-gray-700">
+                <Link href="/admin/users" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                     <ArrowLeft className="h-5 w-5" />
                 </Link>
-                <h1 className="text-2xl font-bold text-gray-900">Edytuj Użytkownika</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Edytuj Użytkownika</h1>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-sm border space-y-8">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 space-y-8 transition-colors">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {error && <div className="text-red-500">{error}</div>}
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Email (Login)</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email (Login)</label>
                         <input
                             name="email"
                             defaultValue={user.email}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Nazwa wyświetlana</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nazwa wyświetlana</label>
                         <input
                             name="name"
                             defaultValue={user.name || ""}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
+                            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                        <div className="space-y-2 border p-3 rounded-md">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role</label>
+                        <div className="space-y-2 border border-gray-200 dark:border-gray-700 p-3 rounded-md bg-gray-50 dark:bg-gray-800/50">
                             {/* Calculate derived roles for UI state if needed, but for now assuming user.roles is passed correctly as array (it's string in DB, need to parse in parent or here) */}
-                            <label className="flex items-center space-x-2">
+                            <label className="flex items-center space-x-2 cursor-pointer">
                                 {/* Note: In this component 'user' prop comes from server page which fetches from prisma. 
-                               Prisma with SQLite returns 'roles' as string if we defined it as String. 
-                               We need to parse it. */}
+                                Prisma with SQLite returns 'roles' as string if we defined it as String. 
+                                We need to parse it. */}
                                 <input
                                     type="checkbox"
                                     name="roles"
                                     value="ADMIN"
                                     defaultChecked={effectiveRoles.includes("ADMIN")}
-                                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500 dark:bg-gray-700 dark:checked:bg-indigo-600 dark:focus:ring-offset-gray-900"
                                 />
-                                <span className="text-sm text-gray-700">Administrator (All except settings)</span>
+                                <span className="text-sm text-gray-700 dark:text-gray-300">Administrator (All except settings)</span>
                             </label>
-                            <label className="flex items-center space-x-2">
+                            <label className="flex items-center space-x-2 cursor-pointer">
                                 <input
                                     type="checkbox"
                                     name="roles"
                                     value="REDAKTOR"
                                     defaultChecked={effectiveRoles.includes("REDAKTOR")}
-                                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500 dark:bg-gray-700 dark:checked:bg-indigo-600 dark:focus:ring-offset-gray-900"
                                 />
-                                <span className="text-sm text-gray-700">Redaktor (News & Projects)</span>
+                                <span className="text-sm text-gray-700 dark:text-gray-300">Redaktor (News & Projects)</span>
                             </label>
-                            <label className="flex items-center space-x-2">
+                            <label className="flex items-center space-x-2 cursor-pointer">
                                 <input
                                     type="checkbox"
                                     name="roles"
                                     value="REKRUTER"
                                     defaultChecked={effectiveRoles.includes("REKRUTER")}
-                                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    className="rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500 dark:bg-gray-700 dark:checked:bg-indigo-600 dark:focus:ring-offset-gray-900"
                                 />
-                                <span className="text-sm text-gray-700">Rekruter (Applications)</span>
+                                <span className="text-sm text-gray-700 dark:text-gray-300">Rekruter (Applications)</span>
                             </label>
                             {(user.email === 'admin@risegen.pl' || effectiveRoles.includes("SUPERADMIN")) && (
                                 <p className="text-xs text-indigo-600 mt-2 font-medium">
@@ -162,12 +162,12 @@ export function EditUserForm({ user }: EditUserFormProps) {
                     </div>
                 </form>
 
-                <div className="pt-6 border-t space-y-4">
-                    <h3 className="text-lg font-medium text-gray-900">Strefa Bezpieczeństwa</h3>
-                    <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border">
+                <div className="pt-6 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">Strefa Bezpieczeństwa</h3>
+                    <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
                         <div>
-                            <p className="font-medium text-gray-900">Reset Hasła</p>
-                            <p className="text-sm text-gray-500">Wyślij użytkownikowi nowe hasło tymczasowe.</p>
+                            <p className="font-medium text-gray-900 dark:text-gray-200">Reset Hasła</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Wyślij użytkownikowi nowe hasło tymczasowe.</p>
                         </div>
                         <div className="flex items-center">
                             {/* We reuse the component but styling might need adjustment to fit "button" look? 

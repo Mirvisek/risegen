@@ -25,14 +25,14 @@ export default async function ProjectPage(props: { params: Promise<{ slug: strin
                 ]}
             />
 
-            <Link href="/projekty" className="inline-flex items-center text-gray-500 hover:text-indigo-600 transition">
+            <Link href="/projekty" className="inline-flex items-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Wróć do listy
             </Link>
 
             <div className="space-y-4">
-                <h1 className="text-4xl font-bold text-gray-900">{project.title}</h1>
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white">{project.title}</h1>
                 <div className="flex gap-2">
-                    <span className="text-sm text-gray-500">{new Date(project.createdAt).toLocaleDateString("pl-PL")}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{new Date(project.createdAt).toLocaleDateString("pl-PL")}</span>
                 </div>
             </div>
 
@@ -46,19 +46,19 @@ export default async function ProjectPage(props: { params: Promise<{ slug: strin
                 return <ProjectGallery images={images} title={project.title} />;
             })()}
 
-            <article className="prose prose-lg max-w-none text-gray-800">
+            <article className="prose prose-lg max-w-none text-gray-800 dark:text-gray-300 dark:prose-invert">
                 <ReactMarkdown
                     components={{
-                        h1: ({ node, ...props }) => <h1 className="text-3xl font-bold text-gray-900 mt-8 mb-4" {...props} />,
-                        h2: ({ node, ...props }) => <h2 className="text-2xl font-bold text-gray-900 mt-6 mb-3" {...props} />,
-                        h3: ({ node, ...props }) => <h3 className="text-xl font-semibold text-gray-900 mt-4 mb-2" {...props} />,
+                        h1: ({ node, ...props }) => <h1 className="text-3xl font-bold text-gray-900 dark:text-white mt-8 mb-4" {...props} />,
+                        h2: ({ node, ...props }) => <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-6 mb-3" {...props} />,
+                        h3: ({ node, ...props }) => <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-4 mb-2" {...props} />,
                         p: ({ node, ...props }) => <p className="mb-4 leading-relaxed" {...props} />,
                         ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-4 space-y-2" {...props} />,
                         ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-4 space-y-2" {...props} />,
                         li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
-                        strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900" {...props} />,
-                        a: ({ node, ...props }) => <a className="text-indigo-600 hover:text-indigo-800 underline" {...props} />,
-                        blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-gray-300 pl-4 italic my-4" {...props} />,
+                        strong: ({ node, ...props }) => <strong className="font-semibold text-gray-900 dark:text-white" {...props} />,
+                        a: ({ node, ...props }) => <a className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 underline" {...props} />,
+                        blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-gray-300 dark:border-gray-700 pl-4 italic my-4" {...props} />,
                     }}
                 >
                     {project.content}

@@ -25,7 +25,7 @@ export function DeleteMessageButton({ id }: { id: string }) {
             <button
                 type="button"
                 title="Usuń wiadomość"
-                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:text-red-400 dark:hover:bg-red-900/10 rounded-lg transition-colors"
                 onClick={() => setIsModalOpen(true)}
             >
                 <Trash2 className="h-5 w-5" />

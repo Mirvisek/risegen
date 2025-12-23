@@ -287,13 +287,21 @@ export async function updateCodeInjection(prevState: any, formData: FormData) {
 
     const recaptchaSiteKey = formData.get("recaptchaSiteKey") as string;
     const recaptchaSecretKey = formData.get("recaptchaSecretKey") as string;
+    const recaptchaVersion = formData.get("recaptchaVersion") as string;
     const googleAnalyticsId = formData.get("googleAnalyticsId") as string;
+
+    console.log("updateCodeInjection formData:", {
+        recaptchaVersion,
+        recaptchaSiteKey,
+        recaptchaSecretKey,
+        googleAnalyticsId
+    });
 
     try {
         await prisma.siteConfig.upsert({
             where: { id: "main" },
-            update: { recaptchaSiteKey, recaptchaSecretKey, googleAnalyticsId },
-            create: { id: "main", recaptchaSiteKey, recaptchaSecretKey, googleAnalyticsId },
+            update: { recaptchaSiteKey, recaptchaSecretKey, recaptchaVersion, googleAnalyticsId },
+            create: { id: "main", recaptchaSiteKey, recaptchaSecretKey, recaptchaVersion, googleAnalyticsId },
         });
 
         revalidatePath("/");

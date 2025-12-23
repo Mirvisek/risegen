@@ -29,13 +29,13 @@ export function UserListActions({ userId, userEmail, userName }: UserListActions
 
     return (
         <div className="flex items-center justify-end gap-2">
-            <Link href={`/admin/users/${userId}`} className="p-2 text-indigo-600 hover:text-indigo-800 transition" title="Edytuj">
+            <Link href={`/admin/users/${userId}`} className="p-2 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 transition" title="Edytuj">
                 <Edit className="h-5 w-5" />
             </Link>
 
             <button
                 type="button"
-                className="p-2 text-red-400 hover:text-red-500 transition"
+                className="p-2 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition"
                 title="Usuń"
                 onClick={() => setIsDeleteOpen(true)}
             >
@@ -49,7 +49,7 @@ export function UserListActions({ userId, userEmail, userName }: UserListActions
                 title="Usuń użytkownika"
                 description={
                     <>
-                        Czy na pewno chcesz usunąć użytkownika <span className="font-bold text-gray-800">{userName || userEmail}</span>?
+                        Czy na pewno chcesz usunąć użytkownika <span className="font-bold text-gray-800 dark:text-white">{userName || userEmail}</span>?
                         <br />
                         Tej operacji nie można cofnąć.
                     </>

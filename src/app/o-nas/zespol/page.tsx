@@ -15,11 +15,11 @@ export default async function TeamPage() {
     });
 
     return (
-        <div className="bg-white py-24 sm:py-32">
+        <div className="bg-white dark:bg-gray-900 py-24 sm:py-32 transition-colors">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl lg:mx-0 mb-16">
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Nasz Zespół</h2>
-                    <p className="mt-6 text-lg leading-8 text-gray-600">
+                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">Nasz Zespół</h2>
+                    <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
                         Ludzie z pasją, którzy każdego dnia pracują na rzecz rozwoju regionu.
                     </p>
                 </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { User } from "lucide-react";
 import { TeamMemberModal } from "@/components/TeamMemberModal";
+import { motion } from "framer-motion";
 
 type TeamMember = {
     id: string;
@@ -36,16 +37,13 @@ export function TeamList({ members, showBoard, showOffice, showCoordinators, sho
     const coordinators = members.filter(m => m.categories.includes("COORDINATOR") || m.category === "COORDINATOR");
     const collaborators = members.filter(m => m.categories.includes("COLLABORATOR") || m.category === "COLLABORATOR");
 
-    // Deduplication (if an item is in multiple, it appears in multiple or just first? Logic: appears in all applicable sections).
-    // The previous logic was specialized map. Let's keep separate sections.
-
     function MemberCard({ member }: { member: TeamMember }) {
         return (
             <div
                 onClick={() => setSelectedMember(member)}
-                className="group relative flex flex-col items-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer border border-transparent hover:border-indigo-100"
+                className="group relative flex flex-col items-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer border border-transparent hover:border-indigo-100 dark:hover:border-indigo-900/50"
             >
-                <div className="relative w-32 h-32 mb-4 rounded-full overflow-hidden bg-gray-100 ring-4 ring-white shadow-lg group-hover:ring-indigo-50 transition-all">
+                <div className="relative w-32 h-32 mb-4 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 ring-4 ring-white dark:ring-gray-800 shadow-lg group-hover:ring-indigo-50 dark:group-hover:ring-indigo-900/30 transition-all">
                     {member.image ? (
                         <Image
                             src={member.image}
@@ -54,16 +52,15 @@ export function TeamList({ members, showBoard, showOffice, showCoordinators, sho
                             className={`object-cover transition-transform duration-500 group-hover:scale-110 ${member.alignment === "top" ? "object-top" : member.alignment === "bottom" ? "object-bottom" : "object-center"}`}
                         />
                     ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
                             <User className="w-12 h-12" />
                         </div>
                     )}
                 </div>
                 <div className="text-center">
-                    <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors">{member.name}</h3>
-                    <p className="text-indigo-600 font-medium text-sm mb-2">{member.role}</p>
-                    {/* Bio snippet or "Click for more" hint could go here, but design prefers clean look */}
-                    <p className="text-xs text-gray-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{member.name}</h3>
+                    <p className="text-indigo-600 dark:text-indigo-400 font-medium text-sm mb-2">{member.role}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         Kliknij, aby zobaczyć więcej
                     </p>
                 </div>
@@ -82,14 +79,21 @@ export function TeamList({ members, showBoard, showOffice, showCoordinators, sho
             {showBoard && boardMembers.length > 0 && (
                 <section>
                     <div className="text-center mb-10">
-                        <h2 className="text-2xl font-bold text-gray-900">Zarząd</h2>
-                        <div className="w-12 h-1 bg-indigo-600 mx-auto rounded-full mt-3"></div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Zarząd</h2>
+                        <div className="w-12 h-1 bg-indigo-600 dark:bg-indigo-500 mx-auto rounded-full mt-3"></div>
                     </div>
                     <div className="flex flex-wrap gap-8 justify-center">
-                        {boardMembers.map(member => (
-                            <div key={member.id} className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)]">
+                        {boardMembers.map((member, i) => (
+                            <motion.div
+                                key={member.id}
+                                className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)]"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                            >
                                 <MemberCard member={member} />
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </section>
@@ -98,14 +102,21 @@ export function TeamList({ members, showBoard, showOffice, showCoordinators, sho
             {showOffice && officeMembers.length > 0 && (
                 <section>
                     <div className="text-center mb-10">
-                        <h2 className="text-2xl font-bold text-gray-900">Biuro</h2>
-                        <div className="w-12 h-1 bg-indigo-600 mx-auto rounded-full mt-3"></div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Biuro</h2>
+                        <div className="w-12 h-1 bg-indigo-600 dark:bg-indigo-500 mx-auto rounded-full mt-3"></div>
                     </div>
                     <div className="flex flex-wrap gap-8 justify-center">
-                        {officeMembers.map(member => (
-                            <div key={member.id} className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)]">
+                        {officeMembers.map((member, i) => (
+                            <motion.div
+                                key={member.id}
+                                className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)]"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                            >
                                 <MemberCard member={member} />
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </section>
@@ -114,14 +125,21 @@ export function TeamList({ members, showBoard, showOffice, showCoordinators, sho
             {showCoordinators && coordinators.length > 0 && (
                 <section>
                     <div className="text-center mb-10">
-                        <h2 className="text-2xl font-bold text-gray-900">Koordynatorzy</h2>
-                        <div className="w-12 h-1 bg-indigo-600 mx-auto rounded-full mt-3"></div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Koordynatorzy</h2>
+                        <div className="w-12 h-1 bg-indigo-600 dark:bg-indigo-500 mx-auto rounded-full mt-3"></div>
                     </div>
                     <div className="flex flex-wrap gap-8 justify-center">
-                        {coordinators.map(member => (
-                            <div key={member.id} className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)]">
+                        {coordinators.map((member, i) => (
+                            <motion.div
+                                key={member.id}
+                                className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)]"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                            >
                                 <MemberCard member={member} />
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </section>
@@ -130,14 +148,21 @@ export function TeamList({ members, showBoard, showOffice, showCoordinators, sho
             {showCollaborators && collaborators.length > 0 && (
                 <section>
                     <div className="text-center mb-10">
-                        <h2 className="text-2xl font-bold text-gray-900">Współpracownicy</h2>
-                        <div className="w-12 h-1 bg-indigo-600 mx-auto rounded-full mt-3"></div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Współpracownicy</h2>
+                        <div className="w-12 h-1 bg-indigo-600 dark:bg-indigo-500 mx-auto rounded-full mt-3"></div>
                     </div>
                     <div className="flex flex-wrap gap-8 justify-center">
-                        {collaborators.map(member => (
-                            <div key={member.id} className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)]">
+                        {collaborators.map((member, i) => (
+                            <motion.div
+                                key={member.id}
+                                className="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(25%-1.5rem)]"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                            >
                                 <MemberCard member={member} />
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </section>

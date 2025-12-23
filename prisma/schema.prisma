@@ -135,6 +135,7 @@ model SiteConfig {
   cookiePolicyContent  String?
   recaptchaSiteKey     String?
   recaptchaSecretKey   String?
+  recaptchaVersion     String?  @default("v2")
   googleAnalyticsId    String?
   googleCalendarId     String?
   showEvents           Boolean  @default(true)

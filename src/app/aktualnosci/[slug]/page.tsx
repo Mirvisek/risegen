@@ -36,14 +36,14 @@ export default async function NewsDetailPage(props: { params: Promise<{ slug: st
                 ]}
             />
 
-            <Link href="/aktualnosci" className="inline-flex items-center text-gray-500 hover:text-indigo-600 transition">
+            <Link href="/aktualnosci" className="inline-flex items-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Wróć do aktualności
             </Link>
 
             <div className="space-y-4">
-                <h1 className="text-4xl font-bold text-gray-900">{news.title}</h1>
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white">{news.title}</h1>
                 <div className="flex gap-2">
-                    <span className="text-sm text-gray-500">{new Date(news.createdAt).toLocaleDateString("pl-PL")}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{new Date(news.createdAt).toLocaleDateString("pl-PL")}</span>
                 </div>
             </div>
 
@@ -57,7 +57,7 @@ export default async function NewsDetailPage(props: { params: Promise<{ slug: st
                 return <ProjectGallery images={images} title={news.title} />;
             })()}
 
-            <article className="prose prose-lg max-w-none text-gray-800">
+            <article className="prose prose-lg max-w-none text-gray-800 dark:text-gray-300 dark:prose-invert">
                 <div dangerouslySetInnerHTML={{ __html: news.content }} />
             </article>
 

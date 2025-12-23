@@ -61,29 +61,29 @@ export function StatsManager({ initialStats }: { initialStats: Stat[] }) {
                 </button>
             </div>
 
-            <div className="overflow-hidden bg-white shadow sm:rounded-lg border border-gray-200">
-                <ul className="divide-y divide-gray-200">
+            <div className="overflow-hidden bg-white dark:bg-gray-900 shadow sm:rounded-lg border border-gray-200 dark:border-gray-800">
+                <ul className="divide-y divide-gray-200 dark:divide-gray-800">
                     {stats.map((stat) => (
-                        <li key={stat.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition">
+                        <li key={stat.id} className="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 transition">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 bg-indigo-50 text-indigo-600 rounded-lg">
+                                <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg">
                                     <Award className="h-6 w-6" />
                                 </div>
                                 <div>
-                                    <p className="font-bold text-gray-900 text-lg">{stat.value}</p>
-                                    <p className="text-sm text-gray-500">{stat.label}</p>
+                                    <p className="font-bold text-gray-900 dark:text-white text-lg">{stat.value}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => handleEdit(stat)}
-                                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                                    className="p-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/50 rounded-lg transition"
                                 >
                                     <Edit className="h-4 w-4" />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(stat.id)}
-                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                    className="p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
                                 >
                                     <Trash2 className="h-4 w-4" />
                                 </button>
@@ -91,7 +91,7 @@ export function StatsManager({ initialStats }: { initialStats: Stat[] }) {
                         </li>
                     ))}
                     {stats.length === 0 && (
-                        <li className="p-8 text-center text-gray-500">
+                        <li className="p-8 text-center text-gray-500 dark:text-gray-400">
                             Brak statystyk. Dodaj pierwsze sukcesy!
                         </li>
                     )}

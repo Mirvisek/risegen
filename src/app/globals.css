@@ -1,10 +1,18 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Enable class-based dark mode for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  color-scheme: light;
   --background: #ffffff;
   --foreground: #171717;
+}
+
+.dark {
+  --background: #030712;
+  --foreground: #f9fafb;
+  color-scheme: dark;
 }
 
 @theme inline {

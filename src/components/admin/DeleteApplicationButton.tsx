@@ -34,7 +34,7 @@ export function DeleteApplicationButton({ id }: Props) {
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition border border-transparent hover:border-red-100"
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-md transition-colors border border-transparent hover:border-red-100 dark:hover:border-red-900/30"
             >
                 <Trash2 className="h-4 w-4" />
                 Usuń zgłoszenie
@@ -53,7 +53,7 @@ export function DeleteApplicationButton({ id }: Props) {
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                     placeholder="Powód usunięcia (np. spam, duplikat, rezygnacja)..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500 text-sm mt-3"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-md focus:ring-red-500 focus:border-red-500 text-sm mt-3"
                     rows={3}
                     autoFocus
                 />

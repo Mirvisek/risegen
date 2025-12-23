@@ -44,19 +44,19 @@ export default function Footer({ config }: FooterProps) {
     }
 
     return (
-        <footer className="bg-gray-50 border-t border-gray-100 py-8">
+        <footer className="bg-gray-50 dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 py-8 transition-colors duration-300">
             <div className="container mx-auto px-4 max-w-7xl">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-4">
 
                     {/* LEFT: Copyright */}
-                    <div className="text-sm text-gray-500 order-3 md:order-1 whitespace-nowrap">
+                    <div className="text-sm text-gray-500 dark:text-gray-400 order-3 md:order-1 whitespace-nowrap">
                         &copy; {new Date().getFullYear()} Stowarzyszenie RiseGen
                     </div>
 
                     {/* CENTER: Organization Details */}
                     {config && (
-                        <div className="flex flex-col items-center text-center text-xs text-gray-500 space-y-1 order-1 md:order-2">
-                            {config.orgName && <p className="font-semibold text-gray-900">{config.orgName}</p>}
+                        <div className="flex flex-col items-center text-center text-xs text-gray-500 dark:text-gray-400 space-y-1 order-1 md:order-2">
+                            {config.orgName && <p className="font-semibold text-gray-900 dark:text-gray-100">{config.orgName}</p>}
 
                             <div className="flex flex-col items-center gap-1">
                                 {config.orgAddress && <span>{config.orgAddress}</span>}
@@ -65,14 +65,14 @@ export default function Footer({ config }: FooterProps) {
                             </div>
 
                             <div className="flex flex-col items-center gap-1 pt-1">
-                                {config.email && <a href={`mailto:${config.email}`} className="hover:text-indigo-600 transition">{config.email}</a>}
+                                {config.email && <a href={`mailto:${config.email}`} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition">{config.email}</a>}
                                 {config.phone && (
                                     <PhoneNumber phone={config.phone} />
                                 )}
                             </div>
 
                             {config.orgBankAccount && (
-                                <div className="text-gray-500 font-medium pt-1">
+                                <div className="text-gray-500 dark:text-gray-400 font-medium pt-1">
                                     Numer konta: {config.orgBankAccount}
                                 </div>
                             )}
@@ -82,19 +82,19 @@ export default function Footer({ config }: FooterProps) {
                     {/* RIGHT: Social Media */}
                     <div className="flex gap-4 order-2 md:order-3">
                         {config?.facebookUrl && (
-                            <Link href={config.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-indigo-600 transition">
+                            <Link href={config.facebookUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
                                 <Facebook className="h-5 w-5" />
                                 <span className="sr-only">Facebook</span>
                             </Link>
                         )}
                         {config?.instagramUrl && (
-                            <Link href={config.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-600 transition">
+                            <Link href={config.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-600 dark:hover:text-pink-400 transition">
                                 <Instagram className="h-5 w-5" />
                                 <span className="sr-only">Instagram</span>
                             </Link>
                         )}
                         {config?.tiktokUrl && (
-                            <Link href={config.tiktokUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-black transition">
+                            <Link href={config.tiktokUrl} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-black dark:hover:text-white transition">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="20"
@@ -113,11 +113,11 @@ export default function Footer({ config }: FooterProps) {
                 </div>
 
                 {/* BOTTOM: Footer Documents */}
-                <div className="border-t border-gray-100 mt-8 pt-8 flex flex-wrap justify-center gap-6 text-xs text-gray-500">
+                <div className="border-t border-gray-100 dark:border-gray-800 mt-8 pt-8 flex flex-wrap justify-center gap-6 text-xs text-gray-500 dark:text-gray-400">
                     {/* Always show Accessibility Declaration */}
                     <Link
                         href="/deklaracja-dostepnosci"
-                        className="hover:text-indigo-600 transition underline decoration-gray-300 underline-offset-4"
+                        className="hover:text-indigo-600 dark:hover:text-indigo-400 transition underline decoration-gray-300 dark:decoration-gray-700 underline-offset-4"
                     >
                         Deklaracja Dostępności
                     </Link>
@@ -125,7 +125,7 @@ export default function Footer({ config }: FooterProps) {
                     {/* Always show Privacy Policy */}
                     <Link
                         href="/polityka-prywatnosci"
-                        className="hover:text-indigo-600 transition underline decoration-gray-300 underline-offset-4"
+                        className="hover:text-indigo-600 dark:hover:text-indigo-400 transition underline decoration-gray-300 dark:decoration-gray-700 underline-offset-4"
                     >
                         Polityka Prywatności
                     </Link>
@@ -133,7 +133,7 @@ export default function Footer({ config }: FooterProps) {
                     {/* Always show Cookie Policy */}
                     <Link
                         href="/polityka-cookies"
-                        className="hover:text-indigo-600 transition underline decoration-gray-300 underline-offset-4"
+                        className="hover:text-indigo-600 dark:hover:text-indigo-400 transition underline decoration-gray-300 dark:decoration-gray-700 underline-offset-4"
                     >
                         Polityka Cookies
                     </Link>
@@ -148,7 +148,7 @@ export default function Footer({ config }: FooterProps) {
                                     href={doc.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="hover:text-indigo-600 transition underline decoration-gray-300 underline-offset-4"
+                                    className="hover:text-indigo-600 dark:hover:text-indigo-400 transition underline decoration-gray-300 dark:decoration-gray-700 underline-offset-4"
                                 >
                                     {doc.name}
                                 </a>

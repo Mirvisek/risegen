@@ -20,5 +20,18 @@
             "type": "image/png",
             "purpose": "any maskable"
         }
+    ],
+    "shortcuts": [
+        {
+            "name": "Panel Admina",
+            "short_name": "Admin",
+            "url": "/admin/dashboard",
+            "icons": [
+                {
+                    "src": "/icon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
     ]
 }

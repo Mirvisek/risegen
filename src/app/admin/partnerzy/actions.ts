@@ -33,13 +33,14 @@ export async function createPartner(prevState: any, formData: FormData) {
         });
 
         revalidatePath("/admin/partnerzy");
+        revalidatePath("/admin/wyglad");
         revalidatePath("/", "layout"); // Update home/layout where partners are shown
     } catch (error) {
         console.error("Failed to create partner:", error);
         return { success: false, message: "Błąd podczas tworzenia partnera." };
     }
 
-    redirect("/admin/partnerzy");
+    redirect("/admin/wyglad?tab=appearance&sub=appearance-partners");
 }
 
 export async function updatePartner(prevState: any, formData: FormData) {
@@ -84,13 +85,14 @@ export async function updatePartner(prevState: any, formData: FormData) {
         });
 
         revalidatePath("/admin/partnerzy");
+        revalidatePath("/admin/wyglad");
         revalidatePath("/", "layout");
     } catch (error) {
         console.error("Failed to update partner:", error);
         return { success: false, message: "Błąd podczas aktualizacji." };
     }
 
-    redirect("/admin/partnerzy");
+    redirect("/admin/wyglad?tab=appearance&sub=appearance-partners");
 }
 
 export async function deletePartner(formData: FormData) {
@@ -114,6 +116,7 @@ export async function deletePartner(formData: FormData) {
                 details: { before: beforeDelete },
             });
             revalidatePath("/admin/partnerzy");
+            revalidatePath("/admin/wyglad");
             revalidatePath("/", "layout");
         }
     }

@@ -66,20 +66,20 @@ export function AttachmentsManager({ attachments, onChange }: AttachmentsManager
     return (
         <div className="space-y-4">
             <div className="flex items-center gap-4">
-                <label className="cursor-pointer bg-white border border-gray-300 rounded-md px-4 py-2 flex items-center gap-2 hover:bg-gray-50 transition shadow-sm text-sm font-medium text-gray-700">
+                <label className="cursor-pointer bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 flex items-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300">
                     {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                     {uploading ? "Wysyłanie..." : "Dodaj Dokument"}
                     <input type="file" className="hidden" onChange={handleFileUpload} disabled={uploading} />
                 </label>
-                <p className="text-xs text-gray-500">PDF, DOC, DOCX, XLS. Maks. 10MB</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">PDF, DOC, DOCX, XLS. Maks. 10MB</p>
             </div>
 
             {attachments.length > 0 && (
-                <ul className="divide-y divide-gray-100 bg-gray-50 rounded-lg border border-gray-200">
+                <ul className="divide-y divide-gray-100 dark:divide-gray-700 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
                     {attachments.map((file, index) => (
                         <li key={index} className="flex items-center justify-between p-3 gap-3">
                             <div className="flex items-center gap-3 flex-grow min-w-0">
-                                <div className="h-8 w-8 rounded bg-indigo-100 flex items-center justify-center text-indigo-600 flex-shrink-0">
+                                <div className="h-8 w-8 rounded bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 flex-shrink-0">
                                     <FileText className="h-4 w-4" />
                                 </div>
                                 <div className="flex-grow min-w-0">
@@ -87,7 +87,7 @@ export function AttachmentsManager({ attachments, onChange }: AttachmentsManager
                                         type="text"
                                         value={file.name}
                                         onChange={(e) => handleNameChange(index, e.target.value)}
-                                        className="block w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-1"
+                                        className="block w-full text-sm border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                                         placeholder="Nazwa pliku"
                                     />
                                 </div>
@@ -97,7 +97,7 @@ export function AttachmentsManager({ attachments, onChange }: AttachmentsManager
                                     href={file.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-1.5 text-gray-400 hover:text-indigo-600 transition"
+                                    className="p-1.5 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
                                     title="Pobierz / Zobacz"
                                 >
                                     <Download className="h-4 w-4" />
@@ -105,7 +105,7 @@ export function AttachmentsManager({ attachments, onChange }: AttachmentsManager
                                 <button
                                     type="button"
                                     onClick={() => removeAttachment(index)}
-                                    className="p-1.5 text-gray-400 hover:text-red-600 transition"
+                                    className="p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition"
                                     title="Usuń"
                                 >
                                     <X className="h-4 w-4" />

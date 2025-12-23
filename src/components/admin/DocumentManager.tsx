@@ -45,16 +45,16 @@ export function DocumentManager({ documents }: { documents: Document[] }) {
                 />
             )}
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h3 className="text-lg font-medium text-gray-900">Lista Dokumentów</h3>
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden transition-colors">
+                <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">Lista Dokumentów</h3>
                 </div>
-                <ul role="list" className="divide-y divide-gray-200">
+                <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-800">
                     {documents.map((doc) => (
-                        <li key={doc.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50">
+                        <li key={doc.id} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                             <div className="flex items-center gap-4">
-                                <span className="text-xs text-gray-400 font-mono w-4">{doc.order}</span>
-                                <div className="h-10 w-10 rounded bg-indigo-50 flex items-center justify-center text-indigo-600">
+                                <span className="text-xs text-gray-400 dark:text-gray-500 font-mono w-4">{doc.order}</span>
+                                <div className="h-10 w-10 rounded bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                                     <FileText className="h-5 w-5" />
                                 </div>
                                 <div>
@@ -62,15 +62,15 @@ export function DocumentManager({ documents }: { documents: Document[] }) {
                                         href={doc.fileUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-sm font-medium text-gray-900 hover:text-indigo-600 hover:underline"
+                                        className="text-sm font-medium text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline"
                                     >
                                         {doc.title}
                                     </a>
-                                    <p className="text-xs text-gray-500">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
                                         Dodano: {new Date(doc.createdAt).toLocaleDateString()}
                                     </p>
-                                    {doc.description && <p className="text-xs text-gray-400 italic truncate max-w-xs">{doc.description}</p>}
-                                    <span className="inline-flex items-center mt-1 rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+                                    {doc.description && <p className="text-xs text-gray-400 dark:text-gray-500 italic truncate max-w-xs">{doc.description}</p>}
+                                    <span className="inline-flex items-center mt-1 rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-300 ring-1 ring-inset ring-gray-500/10 dark:ring-gray-700/50">
                                         {doc.category === 'BASIC' ? 'Podstawowe' : doc.category === 'REPORT' ? 'Sprawozdanie' : doc.category === 'RESOLUTION' ? 'Uchwała' : 'Inne'}
                                     </span>
                                 </div>
@@ -82,7 +82,7 @@ export function DocumentManager({ documents }: { documents: Document[] }) {
                                         setIsCreating(false);
                                         window.scrollTo({ top: 0, behavior: "smooth" });
                                     }}
-                                    className="p-2 text-gray-400 hover:text-indigo-600 transition-colors"
+                                    className="p-2 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                                     title="Edytuj"
                                 >
                                     <Pencil className="h-4 w-4" />
@@ -92,7 +92,7 @@ export function DocumentManager({ documents }: { documents: Document[] }) {
                         </li>
                     ))}
                     {documents.length === 0 && (
-                        <li className="px-6 py-8 text-center text-gray-500">Brak dokumentów.</li>
+                        <li className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">Brak dokumentów.</li>
                     )}
                 </ul>
             </div>

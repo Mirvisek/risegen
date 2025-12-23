@@ -38,12 +38,12 @@ const MenuBar = ({ editor }: { editor: any }) => {
     };
 
     return (
-        <div className="flex flex-wrap gap-1 p-2 border-b bg-gray-50 rounded-t-lg">
+        <div className="flex flex-wrap gap-1 p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-t-lg transition-colors">
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 disabled={!editor.can().chain().focus().toggleBold().run()}
-                className={cn("p-1.5 rounded hover:bg-gray-200 transition", editor.isActive("bold") ? "bg-gray-300 text-black" : "text-gray-600")}
+                className={cn("p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition", editor.isActive("bold") ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white" : "text-gray-600 dark:text-gray-400")}
                 title="Pogrubienie"
             >
                 <Bold className="h-4 w-4" />
@@ -52,7 +52,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 type="button"
                 onClick={() => editor.chain().focus().toggleItalic().run()}
                 disabled={!editor.can().chain().focus().toggleItalic().run()}
-                className={cn("p-1.5 rounded hover:bg-gray-200 transition", editor.isActive("italic") ? "bg-gray-300 text-black" : "text-gray-600")}
+                className={cn("p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition", editor.isActive("italic") ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white" : "text-gray-600 dark:text-gray-400")}
                 title="Kursywa"
             >
                 <Italic className="h-4 w-4" />
@@ -61,18 +61,18 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 type="button"
                 onClick={() => editor.chain().focus().toggleStrike().run()}
                 disabled={!editor.can().chain().focus().toggleStrike().run()}
-                className={cn("p-1.5 rounded hover:bg-gray-200 transition", editor.isActive("strike") ? "bg-gray-300 text-black" : "text-gray-600")}
+                className={cn("p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition", editor.isActive("strike") ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white" : "text-gray-600 dark:text-gray-400")}
                 title="Przekreślenie"
             >
                 <Strikethrough className="h-4 w-4" />
             </button>
 
-            <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
+            <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 self-center" />
 
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                className={cn("p-1.5 rounded hover:bg-gray-200 transition", editor.isActive("heading", { level: 2 }) ? "bg-gray-300 text-black" : "text-gray-600")}
+                className={cn("p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition", editor.isActive("heading", { level: 2 }) ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white" : "text-gray-600 dark:text-gray-400")}
                 title="Nagłówek 2"
             >
                 <Heading1 className="h-4 w-4" />
@@ -80,18 +80,18 @@ const MenuBar = ({ editor }: { editor: any }) => {
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                className={cn("p-1.5 rounded hover:bg-gray-200 transition", editor.isActive("heading", { level: 3 }) ? "bg-gray-300 text-black" : "text-gray-600")}
+                className={cn("p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition", editor.isActive("heading", { level: 3 }) ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white" : "text-gray-600 dark:text-gray-400")}
                 title="Nagłówek 3"
             >
                 <Heading2 className="h-4 w-4" />
             </button>
 
-            <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
+            <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 self-center" />
 
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleBulletList().run()}
-                className={cn("p-1.5 rounded hover:bg-gray-200 transition", editor.isActive("bulletList") ? "bg-gray-300 text-black" : "text-gray-600")}
+                className={cn("p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition", editor.isActive("bulletList") ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white" : "text-gray-600 dark:text-gray-400")}
                 title="Lista punktowana"
             >
                 <List className="h-4 w-4" />
@@ -99,18 +99,18 @@ const MenuBar = ({ editor }: { editor: any }) => {
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                className={cn("p-1.5 rounded hover:bg-gray-200 transition", editor.isActive("orderedList") ? "bg-gray-300 text-black" : "text-gray-600")}
+                className={cn("p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition", editor.isActive("orderedList") ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white" : "text-gray-600 dark:text-gray-400")}
                 title="Lista numerowana"
             >
                 <ListOrdered className="h-4 w-4" />
             </button>
 
-            <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
+            <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 self-center" />
 
             <button
                 type="button"
                 onClick={setLink}
-                className={cn("p-1.5 rounded hover:bg-gray-200 transition", editor.isActive("link") ? "bg-gray-300 text-black" : "text-gray-600")}
+                className={cn("p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition", editor.isActive("link") ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white" : "text-gray-600 dark:text-gray-400")}
                 title="Link"
             >
                 <LinkIcon className="h-4 w-4" />
@@ -118,19 +118,19 @@ const MenuBar = ({ editor }: { editor: any }) => {
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                className={cn("p-1.5 rounded hover:bg-gray-200 transition", editor.isActive("blockquote") ? "bg-gray-300 text-black" : "text-gray-600")}
+                className={cn("p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition", editor.isActive("blockquote") ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white" : "text-gray-600 dark:text-gray-400")}
                 title="Cytat"
             >
                 <Quote className="h-4 w-4" />
             </button>
 
-            <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
+            <div className="w-px h-6 bg-gray-300 dark:bg-gray-700 mx-1 self-center" />
 
             <button
                 type="button"
                 onClick={() => editor.chain().focus().undo().run()}
                 disabled={!editor.can().chain().focus().undo().run()}
-                className="p-1.5 rounded hover:bg-gray-200 transition text-gray-600 disabled:opacity-30"
+                className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition text-gray-600 dark:text-gray-400 disabled:opacity-30"
                 title="Cofnij"
             >
                 <Undo className="h-4 w-4" />
@@ -139,7 +139,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 type="button"
                 onClick={() => editor.chain().focus().redo().run()}
                 disabled={!editor.can().chain().focus().redo().run()}
-                className="p-1.5 rounded hover:bg-gray-200 transition text-gray-600 disabled:opacity-30"
+                className="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition text-gray-600 dark:text-gray-400 disabled:opacity-30"
                 title="Ponów"
             >
                 <Redo className="h-4 w-4" />
@@ -162,7 +162,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
         content: value,
         editorProps: {
             attributes: {
-                class: "prose prose-sm sm:prose-base focus:outline-none min-h-[200px] p-4 max-w-none",
+                class: "prose dark:prose-invert prose-sm sm:prose-base focus:outline-none min-h-[200px] p-4 max-w-none text-gray-900 dark:text-gray-100",
             },
         },
         onUpdate: ({ editor }) => {
@@ -181,7 +181,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
 
 
     return (
-        <div className={cn("border border-gray-300 rounded-lg shadow-sm w-full bg-white overflow-hidden", className)}>
+        <div className={cn("border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm w-full bg-white dark:bg-gray-800 overflow-hidden transition-colors", className)}>
             <MenuBar editor={editor} />
             <EditorContent editor={editor} />
         </div>

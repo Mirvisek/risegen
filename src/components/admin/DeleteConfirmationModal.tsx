@@ -31,20 +31,20 @@ export function DeleteConfirmationModal({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
-            <div className="bg-white rounded-lg p-6 max-w-sm w-full space-y-4 shadow-xl relative animate-in fade-in zoom-in duration-200">
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 max-w-sm w-full space-y-4 shadow-xl relative animate-in fade-in zoom-in duration-200 transition-colors border border-gray-200 dark:border-gray-800">
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition"
+                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition"
                 >
                     <X className="h-5 w-5" />
                 </button>
 
                 <div className="text-center">
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 mb-4">
-                        <Trash2 className="h-6 w-6 text-red-600" />
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 mb-4">
+                        <Trash2 className="h-6 w-6 text-red-600 dark:text-red-400" />
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-                    <div className="text-sm text-gray-500 mt-2">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">{title}</h3>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                         {description}
                     </div>
                     {children && <div className="mt-4 text-left">{children}</div>}
@@ -55,7 +55,7 @@ export function DeleteConfirmationModal({
                         type="button"
                         onClick={onClose}
                         disabled={loading}
-                        className="flex-1 bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50 text-sm font-medium transition disabled:opacity-50"
+                        className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 py-2 px-4 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium transition disabled:opacity-50"
                     >
                         {cancelText}
                     </button>
