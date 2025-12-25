@@ -40,27 +40,25 @@ export async function requestPasswordReset(prevState: any, formData: FormData) {
 
         // Get Email Config
         const config = await prisma.siteConfig.findFirst();
+        const apiKey = process.env.RESEND_API_KEY || config?.resendApiKey;
 
-        if (!config?.smtpHost || !config?.smtpUser || !config?.smtpPassword) {
-            console.error("SMTP Configuration missing");
+        if (!apiKey) {
+            console.error("Missing Resend API Key");
             return {
                 success: false,
                 message: "Błąd konfiguracji serwera pocztowego. Skontaktuj się z administratorem."
             };
         }
 
-        const transporter = nodemailer.createTransport({
-            host: config.smtpHost,
-            port: config.smtpPort || 587,
-            secure: config.smtpPort === 465,
-            auth: {
-                user: config.smtpUser,
-                pass: config.smtpPassword,
-            },
-        });
+        const resend = (await import("resend")).Resend;
+        const client = new resend(apiKey);
 
-        await transporter.sendMail({
-            from: `"${config.siteName || "RiseGen"}" <${config.smtpFrom || config.smtpUser}>`,
+        const fromName = config?.siteName || "RiseGen";
+        const fromEmail = config?.emailFromSupport || "pomoc@risegen.pl";
+        const fromHeader = fromEmail.includes("<") ? fromEmail : `"${fromName}" <${fromEmail}>`;
+
+        await client.emails.send({
+            from: fromHeader,
             to: email,
             subject: "Resetowanie hasła - Panel Admina",
             html: `

@@ -113,27 +113,22 @@ model SiteConfig {
   aboutUsText          String?
   aboutUsGoals         String?
   aboutUsJoinText      String?
+  // Email Configuration (Resend)
+  resendApiKey         String?
+  emailFromContact     String?  @default("kontakt@risegen.pl")
+  emailFromApplications String? @default("rekrutacja@risegen.pl")
+  emailFromSupport     String?  @default("pomoc@risegen.pl")
+  emailFromNewsletter  String?  @default("newsletter@risegen.pl")
+
+  // Legacy SMTP (Deprecated)
   smtpHost             String?
   smtpPort             Int?
   smtpUser             String?
   smtpPassword         String?
-  smtpFrom             String?
-  emailForApplications String?
-  emailForContact      String?
-  seoTitle             String?
-  seoDescription       String?
-  seoKeywords          String?
-  seoAuthor            String?
-  seoRobots            String?
-  faviconUrl           String?
-  ogImageUrl           String?
-  aboutUsSublinks      String?
-  headCode             String?
-  footerCode           String?
-  accessibilityInfo    String?
-  accessibilityDeclarationContent String?
-  privacyPolicyContent String?
-  cookiePolicyContent  String?
+  smtpFrom             String?  // Global fallback
+  emailForApplications String?  // Where to SEND notifications TO
+  emailForContact      String?  // Where to SEND contact msgs TO
+
   recaptchaSiteKey     String?
   recaptchaSecretKey   String?
   recaptchaVersion     String?  @default("v2")
@@ -145,7 +140,6 @@ model SiteConfig {
   isMaintenanceMode    Boolean  @default(false)
   maintenanceMessage   String?
   enableNewsletter     Boolean  @default(false)
-  resendApiKey         String?
   newsletterWelcomeSubject String?
   newsletterWelcomeContent String?
 

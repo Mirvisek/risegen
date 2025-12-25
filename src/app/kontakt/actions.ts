@@ -45,25 +45,26 @@ export async function sendContactMessage(prevState: any, formData: FormData) {
             },
         });
 
-        // Check for SMTP config and send email notification
+        // Send email via Resend
         const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
-        if (config?.smtpHost && config?.smtpUser && config?.smtpPassword) {
-            try {
-                const nodemailer = (await import("nodemailer")).default;
-                const transporter = nodemailer.createTransport({
-                    host: config.smtpHost,
-                    port: config.smtpPort || 587,
-                    secure: config.smtpPort === 465, // true for 465, false for other ports
-                    auth: {
-                        user: config.smtpUser,
-                        pass: config.smtpPassword,
-                    },
-                });
+        const apiKey = process.env.RESEND_API_KEY || config?.resendApiKey;
 
-                await transporter.sendMail({
-                    from: `"Kontakt RiseGen" <${config.smtpFrom || config.smtpUser}>`,
-                    to: config.emailForContact || config.email || "kontakt@risegen.pl", // Fallback chain
-                    replyTo: email,
+        if (apiKey) {
+            try {
+                const resend = (await import("resend")).Resend;
+                const client = new resend(apiKey);
+
+                const fromName = "Kontakt RiseGen";
+                const fromEmail = config?.emailFromContact || "kontakt@risegen.pl";
+                // Ensure proper header format
+                const fromHeader = fromEmail.includes("<") ? fromEmail : `"${fromName}" <${fromEmail}>`;
+
+                const toEmail = config?.emailForContact || config?.email || "kontakt@risegen.pl"; // Odbiorca (Admin)
+
+                await client.emails.send({
+                    from: fromHeader,
+                    to: toEmail,
+                    replyTo: email, // Odpowiedz do użytkownika
                     subject: `[Formularz Kontaktowy] ${subject || "Nowa wiadomość"} (#${nextNumber})`,
                     html: `
                         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
@@ -81,10 +82,9 @@ export async function sendContactMessage(prevState: any, formData: FormData) {
                 });
             } catch (emailError) {
                 console.error("Failed to send email notification:", emailError);
-                // Don't fail the whole request if email fails, just log it. 
-                // Or we could return warning? 
-                // User expects it to arrive. But DB saved it. 
             }
+        } else {
+            console.warn("Missing Resend API Key - email not sent.");
         }
 
         return { success: true, message: "Wiadomość została wysłana! Dziękujemy za kontakt." };

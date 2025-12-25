@@ -47,8 +47,12 @@ export async function POST(req: Request) {
             try {
                 const resend = new Resend(apiKey);
 
+                const fromName = config.siteName || "RiseGen";
+                const fromEmail = config.emailFromNewsletter || "newsletter@risegen.pl";
+                const fromHeader = fromEmail.includes("<") ? fromEmail : `${fromName} <${fromEmail}>`;
+
                 await resend.emails.send({
-                    from: 'RiseGen <kontakt@risegen.pl>', // Update this with your verified domain
+                    from: fromHeader,
                     to: email,
                     subject: config.newsletterWelcomeSubject || `Witaj w RiseGen, ${cleanName}!`,
                     html: `

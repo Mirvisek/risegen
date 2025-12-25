@@ -23,101 +23,90 @@ export function EmailConfigForm({ config }: Props) {
             <div className="border-b dark:border-gray-700 pb-4 mb-4">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
                     <Mail className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                    Ustawienia SMTP
+                    Konfiguracja Nadawców (Resend)
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Skonfiguruj serwer pocztowy do wysyłania powiadomień ze strony.
+                    Skonfiguruj adresy email, z których będą wysyłane wiadomości systemowe.
+                    Wszystkie adresy muszą należeć do domeny zweryfikowanej w Resend (np. <strong>@risegen.pl</strong>).
                 </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label htmlFor="smtpHost" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Host SMTP
-                    </label>
-                    <input
-                        type="text"
-                        name="smtpHost"
-                        id="smtpHost"
-                        defaultValue={config?.smtpHost || ""}
-                        placeholder="np. smtp.gmail.com"
-                        className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="smtpPort" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Port SMTP
-                    </label>
-                    <input
-                        type="number"
-                        name="smtpPort"
-                        id="smtpPort"
-                        defaultValue={config?.smtpPort || 587}
-                        placeholder="587"
-                        className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="smtpUser" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Użytkownik SMTP
-                    </label>
-                    <input
-                        type="text"
-                        name="smtpUser"
-                        id="smtpUser"
-                        defaultValue={config?.smtpUser || ""}
-                        placeholder="np. twoj@email.com"
-                        className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
-                    />
-                </div>
-
-                <div>
-                    <label htmlFor="smtpPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Hasło SMTP
-                    </label>
-                    <input
-                        type="password"
-                        name="smtpPassword"
-                        id="smtpPassword"
-                        defaultValue={config?.smtpPassword || ""}
-                        placeholder="••••••••"
-                        className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
-                    />
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Hasło jest bezpiecznie przechowywane w bazie danych.</p>
-                </div>
-
-                <div className="md:col-span-2">
-                    <label htmlFor="smtpFrom" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Adres Email Nadawcy (From)
+                    <label htmlFor="emailFromContact" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Nadawca - Kontakt
                     </label>
                     <input
                         type="email"
-                        name="smtpFrom"
-                        id="smtpFrom"
-                        defaultValue={config?.smtpFrom || ""}
-                        placeholder="np. no-reply@twojadomena.pl"
+                        name="emailFromContact"
+                        id="emailFromContact"
+                        defaultValue={config?.emailFromContact || "kontakt@risegen.pl"}
+                        placeholder="kontakt@risegen.pl"
                         className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
                     />
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">To ten adres będzie widoczny jako nadawca wiadomości generowanych przez system.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Potwierdzenia wysłania formularza kontaktowego.</p>
+                </div>
+
+                <div>
+                    <label htmlFor="emailFromApplications" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Nadawca - Rekrutacja
+                    </label>
+                    <input
+                        type="email"
+                        name="emailFromApplications"
+                        id="emailFromApplications"
+                        defaultValue={config?.emailFromApplications || "rekrutacja@risegen.pl"}
+                        placeholder="rekrutacja@risegen.pl"
+                        className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
+                    />
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Potwierdzenia zgłoszeń członkowskich/wolontariatu.</p>
+                </div>
+
+                <div>
+                    <label htmlFor="emailFromSupport" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Nadawca - Pomoc / Hasła
+                    </label>
+                    <input
+                        type="email"
+                        name="emailFromSupport"
+                        id="emailFromSupport"
+                        defaultValue={config?.emailFromSupport || "pomoc@risegen.pl"}
+                        placeholder="pomoc@risegen.pl"
+                        className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
+                    />
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Resetowanie haseł i powiadomienia systemowe.</p>
+                </div>
+
+                <div>
+                    <label htmlFor="emailFromNewsletter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Nadawca - Newsletter
+                    </label>
+                    <input
+                        type="email"
+                        name="emailFromNewsletter"
+                        id="emailFromNewsletter"
+                        defaultValue={config?.emailFromNewsletter || "newsletter@risegen.pl"}
+                        placeholder="newsletter@risegen.pl"
+                        className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
+                    />
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Wysyłka newslettera i kampanii Drip.</p>
                 </div>
             </div>
 
             <div className="border-t dark:border-gray-700 pt-8 pb-4 mb-4">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
                     <Mail className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                    Adresy Doręczenia Powiadomień
+                    Adresy Odbiorców (Powiadomienia dla Admina)
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Gdzie mają trafiać wiadomości z formularzy na stronie?
+                    Gdzie mają trafiać wiadomości wysłane przez użytkowników ze strony?
                 </p>
             </div>
 
             <div className="space-y-6">
                 <div>
-                    <label htmlFor="emailForApplications" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Email dla Zgłoszeń
+                    <label htmlFor="emailForApplicationsReceiver" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Odbiorca Zgłoszeń
                     </label>
                     <div className="flex gap-2 items-center">
                         <div className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-3 py-2 rounded-l-md border border-r-0 border-indigo-100 dark:border-indigo-900/50 font-medium text-sm whitespace-nowrap min-w-[120px]">
@@ -126,18 +115,17 @@ export function EmailConfigForm({ config }: Props) {
                         <input
                             type="email"
                             name="emailForApplications"
-                            id="emailForApplications"
+                            id="emailForApplicationsReceiver"
                             defaultValue={config?.emailForApplications || ""}
-                            placeholder="osoba.od.zgłoszeń@example.com"
+                            placeholder="admin@risegen.pl"
                             className="block w-full rounded-r-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
                         />
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-[120px]">Na ten adres będą wysyłane powiadomienia o nowych zgłoszeniach (rekrutacja/wolontariat).</p>
                 </div>
 
                 <div>
-                    <label htmlFor="emailForContact" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Email dla Kontaktu
+                    <label htmlFor="emailForContactReceiver" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Odbiorca Kontaktu
                     </label>
                     <div className="flex gap-2 items-center">
                         <div className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-3 py-2 rounded-l-md border border-r-0 border-indigo-100 dark:border-indigo-900/50 font-medium text-sm whitespace-nowrap min-w-[120px]">
@@ -146,23 +134,12 @@ export function EmailConfigForm({ config }: Props) {
                         <input
                             type="email"
                             name="emailForContact"
-                            id="emailForContact"
+                            id="emailForContactReceiver"
                             defaultValue={config?.emailForContact || ""}
-                            placeholder="biuro@example.com"
+                            placeholder="kontakt@risegen.pl"
                             className="block w-full rounded-r-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
                         />
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-[120px]">Na ten adres będą trafiać wiadomości z ogólnego formularza kontaktowego.</p>
-                </div>
-            </div>
-
-            <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-lg flex items-start gap-3 mt-6 border border-blue-200 dark:border-blue-800/30">
-                <ShieldAlert className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-                <div className="text-sm text-blue-800 dark:text-blue-200">
-                    <p className="font-semibold mb-1">Resetowanie haseł</p>
-                    <p className="text-blue-700 dark:text-blue-300/80">
-                        Wiadomości z linkiem do resetowania hasła (lub dane logowania dla nowych użytkowników) będą wysyłane z adresu skonfigurowanego powyżej jako <strong>Adres Email Nadawcy (From)</strong> na adres email przypisany do konta użytkownika w panelu "Użytkownicy".
-                    </p>
                 </div>
             </div>
 

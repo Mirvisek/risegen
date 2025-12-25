@@ -62,23 +62,27 @@ export async function submitApplication(prevState: any, formData: FormData) {
             },
         });
 
-        // Send email notification
+        // Send email notification via Resend
         try {
             const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
-            if (config?.smtpHost && config?.smtpUser && config?.smtpPassword) {
-                const nodemailer = (await import("nodemailer")).default;
-                const transporter = nodemailer.createTransport({
-                    host: config.smtpHost,
-                    port: config.smtpPort || 587,
-                    secure: config.smtpPort === 465,
-                    auth: { user: config.smtpUser, pass: config.smtpPassword },
-                });
+            const apiKey = process.env.RESEND_API_KEY || config?.resendApiKey;
+
+            if (apiKey) {
+                const resend = (await import("resend")).Resend;
+                const client = new resend(apiKey);
 
                 const typeLabel = rawData.type === 'MEMBER' ? 'Członek Stowarzyszenia' : 'Wolontariusz';
 
-                await transporter.sendMail({
-                    from: `"Rekruter RiseGen" <${config.smtpFrom || config.smtpUser}>`,
-                    to: config.emailForApplications || config.email || "rekrutacja@risegen.pl",
+                const fromName = "Rekruter RiseGen";
+                const fromEmail = config?.emailFromApplications || "rekrutacja@risegen.pl";
+                const fromHeader = fromEmail.includes("<") ? fromEmail : `"${fromName}" <${fromEmail}>`;
+
+                const toEmail = config?.emailForApplications || config?.email || "rekrutacja@risegen.pl";
+
+                await client.emails.send({
+                    from: fromHeader,
+                    to: toEmail,
+                    replyTo: rawData.email,
                     subject: `[Nowe Zgłoszenie] ${rawData.firstName} ${rawData.lastName} - ${typeLabel} (#${nextNumber})`,
                     html: `
                         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">

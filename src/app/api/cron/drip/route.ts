@@ -29,6 +29,10 @@ export async function POST(req: Request) {
         }
         const resend = new Resend(apiKey);
 
+        const fromName = config.siteName || "RiseGen";
+        const fromEmail = config.emailFromNewsletter || "newsletter@risegen.pl";
+        const fromHeader = fromEmail.includes("<") ? fromEmail : `${fromName} <${fromEmail}>`;
+
         // 3. Process Step 1 -> Step 2 (Day 2 Email)
         // Find subscribers who are at step 0 AND createdAt is older than dripDay2Delay days
         const delayMsDay2 = config.dripDay2Delay * 24 * 60 * 60 * 1000;
@@ -47,7 +51,7 @@ export async function POST(req: Request) {
         for (const sub of subscribersForDay2) {
             try {
                 await resend.emails.send({
-                    from: 'RiseGen <kontakt@risegen.pl>',
+                    from: fromHeader,
                     to: sub.email,
                     subject: config.dripDay2Subject || "Poznaj nasze największe sukcesy! 🌟",
                     html: `
@@ -94,7 +98,7 @@ export async function POST(req: Request) {
         for (const sub of subscribersForDay5) {
             try {
                 await resend.emails.send({
-                    from: 'RiseGen <kontakt@risegen.pl>',
+                    from: fromHeader,
                     to: sub.email,
                     subject: config.dripDay5Subject || "Chcesz dołączyć do działania? 🤝",
                     html: `

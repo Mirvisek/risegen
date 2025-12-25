@@ -264,19 +264,34 @@ export async function updateEmailConfig(prevState: any, formData: FormData) {
     if (!checkPermission(session)) return { success: false, message: "Brak uprawnień." };
     // This function had 'void' return in catch, inconsistent with others, but let's keep it robust.
 
-    const smtpHost = formData.get("smtpHost") as string;
-    const smtpPort = parseInt(formData.get("smtpPort") as string) || 587;
-    const smtpUser = formData.get("smtpUser") as string;
-    const smtpPassword = formData.get("smtpPassword") as string;
-    const smtpFrom = formData.get("smtpFrom") as string;
-    const emailForApplications = formData.get("emailForApplications") as string;
-    const emailForContact = formData.get("emailForContact") as string;
+    const emailFromContact = formData.get("emailFromContact") as string;
+    const emailFromApplications = formData.get("emailFromApplications") as string; // SENDER
+    const emailFromSupport = formData.get("emailFromSupport") as string;
+    const emailFromNewsletter = formData.get("emailFromNewsletter") as string;
+
+    const emailForApplications = formData.get("emailForApplications") as string; // RECIPIENT
+    const emailForContact = formData.get("emailForContact") as string; // RECIPIENT
 
     try {
         await prisma.siteConfig.upsert({
             where: { id: "main" },
-            update: { smtpHost, smtpPort, smtpUser, smtpPassword, smtpFrom, emailForApplications, emailForContact },
-            create: { id: "main", smtpHost, smtpPort, smtpUser, smtpPassword, smtpFrom, emailForApplications, emailForContact },
+            update: {
+                emailFromContact,
+                emailFromApplications, // Sender
+                emailFromSupport,
+                emailFromNewsletter,
+                emailForApplications, // Recipient
+                emailForContact
+            },
+            create: {
+                id: "main",
+                emailFromContact,
+                emailFromApplications,
+                emailFromSupport,
+                emailFromNewsletter,
+                emailForApplications,
+                emailForContact
+            },
         });
 
         revalidatePath("/");
