@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect, useRef } from "react";
+import { useActionState, useState, useEffect, useRef, startTransition } from "react";
 import { submitApplication } from "@/app/zgloszenia/actions";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -83,9 +83,14 @@ export function ApplicationForm({ recaptchaSiteKey, recaptchaVersion }: Props) {
             setCaptchaToken(token);
 
             // Create FormData and submit
-            const formData = new FormData(e.currentTarget);
+            // Use ref because e.currentTarget is lost after await
+            if (!formRef.current) return;
+            const formData = new FormData(formRef.current);
             formData.set('captchaToken', token);
-            formAction(formData);
+
+            startTransition(() => {
+                formAction(formData);
+            });
         } catch (error) {
             console.error("reCAPTCHA error:", error);
             toast.error("Błąd weryfikacji reCAPTCHA. Spróbuj ponownie.");

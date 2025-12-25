@@ -332,7 +332,7 @@ export async function updateCodeInjection(prevState: any, formData: FormData) {
             create: { id: "main", ...updateData },
         });
 
-        revalidatePath("/");
+        revalidatePath("/", "layout");
         revalidatePath("/admin/wyglad");
         return { success: true, message: "Konfiguracja integracji zaktualizowana." };
     } catch (error) {

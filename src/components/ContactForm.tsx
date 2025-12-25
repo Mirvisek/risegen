@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect, useRef } from "react";
+import { useActionState, useState, useEffect, useRef, startTransition } from "react";
 import { sendContactMessage } from "@/app/kontakt/actions";
 import { Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
@@ -82,18 +82,22 @@ export function ContactForm({ recaptchaSiteKey, recaptchaVersion }: Props) {
             const token = await window.grecaptcha.enterprise.execute(keyToUse, { action: 'contact' });
             setCaptchaToken(token);
 
-            // Create FormData and submit
-            const formData = new FormData(e.currentTarget);
+            // Create FormData using REf to avoid execution context loss
+            if (!formRef.current) return;
+            const formData = new FormData(formRef.current);
             formData.set('captchaToken', token);
 
             // We can also pass the siteKey if backend needs it dynamically, usually backend has it.
             // But strict prop interface might be needed. 
             // For now just token.
 
-            formAction(formData);
-        } catch (error) {
-            console.error("reCAPTCHA error:", error);
-            toast.error("Błąd weryfikacji reCAPTCHA. Spróbuj ponownie.");
+            startTransition(() => {
+                formAction(formData);
+            });
+        } catch (error: any) {
+            console.error("reCAPTCHA error details:", error);
+            const errorMessage = error?.message || "Nieznany błąd";
+            toast.error(`Błąd weryfikacji reCAPTCHA: ${errorMessage}. Spróbuj odświeżyć stronę.`);
         }
     };
 
