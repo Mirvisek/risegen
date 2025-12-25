@@ -921,6 +921,18 @@ export function CodeInjectionForm({ config }: Props) {
                             <input type="password" name="recaptchaSecretKey" id="recaptchaSecretKey" defaultValue={config?.recaptchaSecretKey || ""} placeholder="6L..." className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors font-mono" />
                         </div>
                     </div>
+                    <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 text-sm">
+                        <h5 className="font-semibold text-gray-900 dark:text-white mb-2">Jak skonfigurować reCAPTCHA Enterprise?</h5>
+                        <ol className="list-decimal list-inside space-y-1 text-gray-600 dark:text-gray-400">
+                            <li>Utwórz projekt w <a href="https://console.cloud.google.com/security/recaptcha" target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">Google Cloud Console</a>.</li>
+                            <li>Włącz <strong>reCAPTCHA Enterprise API</strong>.</li>
+                            <li>Utwórz klucz (Key) typu <strong>Score-based (V3)</strong> i wklej go w pole <em>Site Key</em>.</li>
+                            <li>Z zakładki "Credentials" (Dane logowania) pobierz/utwórz <strong>API Key</strong> i wklej go w pole <em>Secret Key</em>.</li>
+                        </ol>
+                        <p className="mt-2 text-xs text-gray-500">
+                            Uwaga: Dla wersji Enterprise, pole "Secret Key" przechowuje klucz Google Cloud API Key (zaczynający się zwykle od "AIza...").
+                        </p>
+                    </div>
                 </div>
 
                 <div className="sm:col-span-6 pt-4 border-t border-gray-100 dark:border-gray-800">

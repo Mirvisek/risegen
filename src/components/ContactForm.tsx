@@ -3,7 +3,6 @@
 import { useActionState, useState, useEffect, useRef } from "react";
 import { sendContactMessage } from "@/app/kontakt/actions";
 import { Loader2, Send } from "lucide-react";
-import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "sonner";
 
 declare global {
@@ -20,7 +19,6 @@ interface Props {
 export function ContactForm({ recaptchaSiteKey, recaptchaVersion }: Props) {
     const [state, formAction, isPending] = useActionState(sendContactMessage, null);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-    const recaptchaRef = useRef<ReCAPTCHA>(null);
     const formRef = useRef<HTMLFormElement>(null);
 
     const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -29,66 +27,82 @@ export function ContactForm({ recaptchaSiteKey, recaptchaVersion }: Props) {
         if (state?.message) {
             if (state.success) {
                 toast.success(state.message);
-                if (recaptchaRef.current) {
-                    recaptchaRef.current.reset();
-                }
+                // Removed recaptcha reset ref as we use Enterprise invisible now
             } else {
                 toast.error(state.message);
             }
         }
     }, [state]);
 
-    // Load reCAPTCHA v3 script
+    // Load reCAPTCHA Enterprise script
     useEffect(() => {
-        if (recaptchaVersion === "v3" && recaptchaSiteKey) {
-            const script = document.createElement("script");
-            script.src = `https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`;
-            script.async = true;
-            script.onload = () => {
-                // Wait for grecaptcha to be ready
-                window.grecaptcha.ready(() => {
+        // Use the hardcoded key from instructions or fallback to prop/env if needed, 
+        // but user instruction was specific about the key "6Lc6NDYsAAAAAIhVMaBKLwuAUByuSjR2ZqYUdF7Y" for the script src.
+        // We will default to that if not provided (though proper practice is env var).
+        const keyToUse = "6Lc6NDYsAAAAAIhVMaBKLwuAUByuSjR2ZqYUdF7Y";
+
+        const script = document.createElement("script");
+        script.src = `https://www.google.com/recaptcha/enterprise.js?render=${keyToUse}`;
+        script.async = true;
+        script.onload = () => {
+            // Wait for grecaptcha to be ready
+            if (window.grecaptcha && window.grecaptcha.enterprise) {
+                window.grecaptcha.enterprise.ready(() => {
                     setScriptLoaded(true);
                 });
-            };
-            document.head.appendChild(script);
-
-            return () => {
-                try {
-                    document.head.removeChild(script);
-                } catch (e) {
-                    // Script might already be removed
-                }
-            };
-        }
-    }, [recaptchaSiteKey, recaptchaVersion]);
-
-    // Handle form submission with v3
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        if (recaptchaVersion === "v3" && finalSiteKey) {
-            e.preventDefault();
-
-            if (!scriptLoaded || !window.grecaptcha) {
-                toast.error("Błąd ładowania reCAPTCHA. Spróbuj ponownie.");
-                return;
             }
+        };
+        document.head.appendChild(script);
 
+        return () => {
             try {
-                const token = await window.grecaptcha.execute(finalSiteKey, { action: 'contact' });
-                setCaptchaToken(token);
-
-                // Create FormData and submit
-                const formData = new FormData(e.currentTarget);
-                formData.set('captchaToken', token);
-                formAction(formData);
-            } catch (error) {
-                console.error("reCAPTCHA error:", error);
-                toast.error("Błąd weryfikacji reCAPTCHA. Spróbuj ponownie.");
+                document.head.removeChild(script);
+            } catch (e) {
+                // Script might already be removed
             }
+        };
+    }, []);
+
+    // Handle form submission with Enterprise
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        // We act if script is loaded.
+        // We treat everything as "Enterprise" flow now based on user request.
+
+        const keyToUse = "6Lc6NDYsAAAAAIhVMaBKLwuAUByuSjR2ZqYUdF7Y";
+
+        if (state?.success) return; // Prevention
+
+        // If we are validating before submit
+        e.preventDefault();
+
+        if (!scriptLoaded || !window.grecaptcha || !window.grecaptcha.enterprise) {
+            toast.error("Ładowanie zabezpieczeń... Spróbuj za chwilę.");
+            return;
+        }
+
+        try {
+            const token = await window.grecaptcha.enterprise.execute(keyToUse, { action: 'contact' });
+            setCaptchaToken(token);
+
+            // Create FormData and submit
+            const formData = new FormData(e.currentTarget);
+            formData.set('captchaToken', token);
+
+            // We can also pass the siteKey if backend needs it dynamically, usually backend has it.
+            // But strict prop interface might be needed. 
+            // For now just token.
+
+            formAction(formData);
+        } catch (error) {
+            console.error("reCAPTCHA error:", error);
+            toast.error("Błąd weryfikacji reCAPTCHA. Spróbuj ponownie.");
         }
     };
 
-    const finalSiteKey = recaptchaSiteKey || process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-    const isV3 = recaptchaVersion === "v3";
+    // The user moved to Enterprise, assuming 'v3' style invisible execution.
+    // We ignore the 'isV3' toggle effectively and enforce Enterprise.
+    const isV3 = true; // Force invisible/enterprise flow layout
+    const finalSiteKey = "6Lc6NDYsAAAAAIhVMaBKLwuAUByuSjR2ZqYUdF7Y";
 
     if (state?.success) {
         return (
@@ -175,16 +189,7 @@ export function ContactForm({ recaptchaSiteKey, recaptchaVersion }: Props) {
                 </div>
 
                 {/* reCAPTCHA v2 */}
-                {!isV3 && typeof finalSiteKey === 'string' && finalSiteKey.length > 0 && (
-                    <div className="flex justify-center">
-                        <ReCAPTCHA
-                            ref={recaptchaRef}
-                            sitekey={finalSiteKey}
-                            onChange={setCaptchaToken}
-                        />
-                        <input type="hidden" name="captchaToken" value={captchaToken || ""} />
-                    </div>
-                )}
+                {/* reCAPTCHA v2 removed - standardized on Enterprise/Invisible */}
 
                 {/* Hidden field for v3 token */}
                 {isV3 && <input type="hidden" name="captchaToken" value={captchaToken || ""} />}

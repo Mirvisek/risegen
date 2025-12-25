@@ -28,7 +28,7 @@ export async function submitApplication(prevState: any, formData: FormData) {
     };
 
     const captchaToken = formData.get("captchaToken") as string;
-    const isCaptchaValid = await verifyCaptcha(captchaToken);
+    const isCaptchaValid = await verifyCaptcha(captchaToken, "apply");
 
     if (!isCaptchaValid) {
         return {

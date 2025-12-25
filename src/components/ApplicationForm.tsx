@@ -3,7 +3,6 @@
 import { useActionState, useState, useEffect, useRef } from "react";
 import { submitApplication } from "@/app/zgloszenia/actions";
 import { Loader2 } from "lucide-react";
-import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "sonner";
 
 declare global {
@@ -28,7 +27,6 @@ export function ApplicationForm({ recaptchaSiteKey, recaptchaVersion }: Props) {
     const [state, formAction, isPending] = useActionState(submitApplication, initialState);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
     const [scriptLoaded, setScriptLoaded] = useState(false);
-    const recaptchaRef = useRef<ReCAPTCHA>(null);
     const formRef = useRef<HTMLFormElement>(null);
 
     // Toast feedback
@@ -36,66 +34,67 @@ export function ApplicationForm({ recaptchaSiteKey, recaptchaVersion }: Props) {
         if (state?.message) {
             if (state.success) {
                 toast.success(state.message);
-                if (recaptchaRef.current) {
-                    recaptchaRef.current.reset();
-                }
+                // Reset logic not needed for invisible/enterprise
             } else {
                 toast.error(state.message);
             }
         }
     }, [state]);
 
-    // Fallback if not configured in DB
-    const finalSiteKey = recaptchaSiteKey || process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-    const isV3 = recaptchaVersion === "v3";
-
-    // Load reCAPTCHA v3 script
+    // Load reCAPTCHA Enterprise script
     useEffect(() => {
-        if (isV3 && finalSiteKey) {
-            const script = document.createElement("script");
-            script.src = `https://www.google.com/recaptcha/api.js?render=${finalSiteKey}`;
-            script.async = true;
-            script.onload = () => {
-                window.grecaptcha.ready(() => {
+        const keyToUse = "6Lc6NDYsAAAAAIhVMaBKLwuAUByuSjR2ZqYUdF7Y";
+
+        const script = document.createElement("script");
+        script.src = `https://www.google.com/recaptcha/enterprise.js?render=${keyToUse}`;
+        script.async = true;
+        script.onload = () => {
+            // Wait for grecaptcha to be ready
+            if (window.grecaptcha && window.grecaptcha.enterprise) {
+                window.grecaptcha.enterprise.ready(() => {
                     setScriptLoaded(true);
                 });
-            };
-            document.head.appendChild(script);
-
-            return () => {
-                try {
-                    document.head.removeChild(script);
-                } catch (e) {
-                    // Script might already be removed
-                }
-            };
-        }
-    }, [finalSiteKey, isV3]);
-
-    // Handle form submission with v3
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        if (isV3 && finalSiteKey) {
-            e.preventDefault();
-
-            if (!scriptLoaded || !window.grecaptcha) {
-                toast.error("Błąd ładowania reCAPTCHA. Spróbuj ponownie.");
-                return;
             }
+        };
+        document.head.appendChild(script);
 
+        return () => {
             try {
-                const token = await window.grecaptcha.execute(finalSiteKey, { action: 'apply' });
-                setCaptchaToken(token);
-
-                // Create FormData and submit
-                const formData = new FormData(e.currentTarget);
-                formData.set('captchaToken', token);
-                formAction(formData);
-            } catch (error) {
-                console.error("reCAPTCHA error:", error);
-                toast.error("Błąd weryfikacji reCAPTCHA. Spróbuj ponownie.");
+                document.head.removeChild(script);
+            } catch (e) {
+                // Script might already be removed
             }
+        };
+    }, []);
+
+    // Handle form submission with Enterprise
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        const keyToUse = "6Lc6NDYsAAAAAIhVMaBKLwuAUByuSjR2ZqYUdF7Y";
+
+        e.preventDefault();
+
+        if (!scriptLoaded || !window.grecaptcha || !window.grecaptcha.enterprise) {
+            toast.error("Ładowanie zabezpieczeń... Spróbuj za chwilę.");
+            return;
+        }
+
+        try {
+            const token = await window.grecaptcha.enterprise.execute(keyToUse, { action: 'apply' });
+            setCaptchaToken(token);
+
+            // Create FormData and submit
+            const formData = new FormData(e.currentTarget);
+            formData.set('captchaToken', token);
+            formAction(formData);
+        } catch (error) {
+            console.error("reCAPTCHA error:", error);
+            toast.error("Błąd weryfikacji reCAPTCHA. Spróbuj ponownie.");
         }
     };
+
+    // Force invisible/enterprise flow layout
+    const isV3 = true;
+    const finalSiteKey = "6Lc6NDYsAAAAAIhVMaBKLwuAUByuSjR2ZqYUdF7Y";
 
     // Controlled state only for description to handle live validation/colors
     // For other fields, we rely on defaultValue from server state for preservation
@@ -289,15 +288,7 @@ export function ApplicationForm({ recaptchaSiteKey, recaptchaVersion }: Props) {
                             </div>
                         )}
 
-                        {typeof finalSiteKey === 'string' && finalSiteKey.length > 0 && !isV3 && (
-                            <div className="flex justify-center pt-2">
-                                <ReCAPTCHA
-                                    sitekey={finalSiteKey}
-                                    onChange={setCaptchaToken}
-                                />
-                                <input type="hidden" name="captchaToken" value={captchaToken || ""} />
-                            </div>
-                        )}
+                        {/* reCAPTCHA v2 removed - standardized on Enterprise/Invisible */}
 
                         {/* Hidden field for v3 token */}
                         {isV3 && <input type="hidden" name="captchaToken" value={captchaToken || ""} />}
