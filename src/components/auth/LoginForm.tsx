@@ -1,85 +1,32 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
 
-declare global {
-    interface Window {
-        grecaptcha: any;
-    }
-}
-
-interface Props {
-    recaptchaSiteKey?: string | null;
-}
-
-export function LoginForm({ recaptchaSiteKey }: Props) {
+export function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const [scriptLoaded, setScriptLoaded] = useState(false);
     const router = useRouter();
-
-    // Load reCAPTCHA Enterprise script
-    useEffect(() => {
-        const keyToUse = recaptchaSiteKey || "6Lc6NDYsAAAAAIhVMaBKLwuAUByuSjR2ZqYUdF7Y";
-
-        const script = document.createElement("script");
-        script.src = `https://www.google.com/recaptcha/enterprise.js?render=${keyToUse}`;
-        script.async = true;
-        script.onload = () => {
-            if (window.grecaptcha && window.grecaptcha.enterprise) {
-                window.grecaptcha.enterprise.ready(() => {
-                    setScriptLoaded(true);
-                });
-            }
-        };
-        document.head.appendChild(script);
-
-        return () => {
-            try {
-                // Check if script is still in head before removing
-                if (document.head.contains(script)) {
-                    document.head.removeChild(script);
-                }
-            } catch (e) {
-                // Ignore
-            }
-        };
-    }, [recaptchaSiteKey]);
-
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError("");
 
-        const keyToUse = recaptchaSiteKey || "6Lc6NDYsAAAAAIhVMaBKLwuAUByuSjR2ZqYUdF7Y";
-
-        if (!scriptLoaded || !window.grecaptcha || !window.grecaptcha.enterprise) {
-            setError("Ładowanie zabezpieczeń... Spróbuj za chwilę.");
-            setLoading(false);
-            return;
-        }
-
         try {
-            // Get Token
-            const token = await window.grecaptcha.enterprise.execute(keyToUse, { action: 'login' });
-
             // SignIn
             const result = await signIn("credentials", {
                 email,
                 password,
-                captchaToken: token,
                 redirect: false,
             });
 
             if (result?.error) {
-                setError("Nieprawidłowy email, hasło lub błąd weryfikacji");
+                setError("Nieprawidłowy email lub hasło");
                 setLoading(false);
             } else {
                 router.push("/admin/dashboard");
@@ -154,19 +101,6 @@ export function LoginForm({ recaptchaSiteKey }: Props) {
                         >
                             {loading ? <Loader2 className="animate-spin h-5 w-5" /> : "Zaloguj się"}
                         </button>
-                    </div>
-
-                    {/* reCAPTCHA Info */}
-                    <div className="mt-4 text-xs text-center text-gray-500 dark:text-gray-400">
-                        Ta strona jest chroniona przez reCAPTCHA. Obowiązują{" "}
-                        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="underline">
-                            Polityka Prywatności
-                        </a>
-                        {" "}i{" "}
-                        <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="underline">
-                            Warunki Użytkowania
-                        </a>
-                        {" "}Google.
                     </div>
                 </form>
             </div>

@@ -62,48 +62,56 @@ export async function submitApplication(prevState: any, formData: FormData) {
             },
         });
 
-        // Send email notification via Resend
+        // Send Discord Notification
+        try {
+            const { sendDiscordNotification, DISCORD_COLORS } = await import("@/lib/discord");
+            const typeLabel = rawData.type === 'MEMBER' ? 'Członek' : 'Wolontariusz';
+
+            await sendDiscordNotification({
+                title: `📋 Nowa Aplikacja: ${typeLabel} (#${nextNumber})`,
+                description: rawData.description.length > 200 ? rawData.description.substring(0, 200) + "..." : rawData.description,
+                color: DISCORD_COLORS.GREEN,
+                fields: [
+                    { name: "Kandydat", value: `${rawData.firstName} ${rawData.lastName}`, inline: true },
+                    { name: "Email", value: rawData.email, inline: true },
+                    { name: "Telefon", value: rawData.phone, inline: true }
+                ],
+                url: `${process.env.NEXTAUTH_URL}/admin/zgloszenia`
+            }, "APPLICATION");
+        } catch (e) { console.error("Discord error:", e); }
+
+        // Send email notification via mailSender
         try {
             const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
-            const apiKey = process.env.RESEND_API_KEY || config?.resendApiKey;
+            const { sendEmail } = await import("@/lib/mailSender");
+            const typeLabel = rawData.type === 'MEMBER' ? 'Członek Stowarzyszenia' : 'Wolontariusz';
 
-            if (apiKey) {
-                const resend = (await import("resend")).Resend;
-                const client = new resend(apiKey);
+            const toEmail = config?.emailForApplications || config?.email || "rekrutacja@risegen.pl";
 
-                const typeLabel = rawData.type === 'MEMBER' ? 'Członek Stowarzyszenia' : 'Wolontariusz';
-
-                const fromName = "Rekruter RiseGen";
-                const fromEmail = config?.emailFromApplications || "rekrutacja@risegen.pl";
-                const fromHeader = fromEmail.includes("<") ? fromEmail : `"${fromName}" <${fromEmail}>`;
-
-                const toEmail = config?.emailForApplications || config?.email || "rekrutacja@risegen.pl";
-
-                await client.emails.send({
-                    from: fromHeader,
-                    to: toEmail,
-                    replyTo: rawData.email,
-                    subject: `[Nowe Zgłoszenie] ${rawData.firstName} ${rawData.lastName} - ${typeLabel} (#${nextNumber})`,
-                    html: `
-                        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
-                            <h2 style="color: #4F46E5;">Nowe zgłoszenie rekrutacyjne</h2>
-                            <p><strong>Numer:</strong> #${nextNumber}</p>
-                            <p><strong>Kandydat:</strong> ${rawData.firstName} ${rawData.lastName}</p>
-                            <p><strong>Typ:</strong> ${typeLabel}</p>
-                            <p><strong>Email:</strong> <a href="mailto:${rawData.email}">${rawData.email}</a></p>
-                            <p><strong>Telefon:</strong> ${rawData.phone}</p>
-                            <p><strong>Data urodzenia:</strong> ${rawData.birthDate}</p>
-                            <p><strong>Instagram:</strong> ${rawData.instagram || '-'}</p>
-                            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
-                            <h3>Opis / Motywacja:</h3>
-                            <div style="background: #f9f9f9; padding: 15px; border-radius: 5px;">
-                                <p style="margin-top: 0; white-space: pre-wrap;">${rawData.description}</p>
-                            </div>
-                            <p style="color: #888; font-size: 12px; margin-top: 20px;"><a href="${process.env.NEXTAUTH_URL}/admin/zgloszenia">Przejdź do panelu admina</a></p>
+            await sendEmail({
+                to: toEmail,
+                subject: `[Nowe Zgłoszenie] ${rawData.firstName} ${rawData.lastName} - ${typeLabel} (#${nextNumber})`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                        <h2 style="color: #4F46E5;">Nowe zgłoszenie rekrutacyjne</h2>
+                        <p><strong>Numer:</strong> #${nextNumber}</p>
+                        <p><strong>Kandydat:</strong> ${rawData.firstName} ${rawData.lastName}</p>
+                        <p><strong>Typ:</strong> ${typeLabel}</p>
+                        <p><strong>Email:</strong> <a href="mailto:${rawData.email}">${rawData.email}</a></p>
+                        <p><strong>Telefon:</strong> ${rawData.phone}</p>
+                        <p><strong>Data urodzenia:</strong> ${rawData.birthDate}</p>
+                        <p><strong>Instagram:</strong> ${rawData.instagram || '-'}</p>
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                        <h3>Opis / Motywacja:</h3>
+                        <div style="background: #f9f9f9; padding: 15px; border-radius: 5px;">
+                            <p style="margin-top: 0; white-space: pre-wrap;">${rawData.description}</p>
                         </div>
-                    `,
-                });
-            }
+                        <p style="color: #888; font-size: 12px; margin-top: 20px;"><a href="${process.env.NEXTAUTH_URL}/admin/zgloszenia">Przejdź do panelu admina</a></p>
+                    </div>
+                `,
+                fromConfigKey: "emailFromApplications",
+                replyTo: rawData.email
+            });
         } catch (e) {
             console.error("Failed to send application email:", e);
         }

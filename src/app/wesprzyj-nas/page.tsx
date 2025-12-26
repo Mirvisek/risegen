@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Heart, CreditCard, Wallet, ArrowRight, Target, Users, Sparkles } from "lucide-react";
 import CopyButton from "./CopyButton";
 import Link from 'next/link';
+import { DonationWidget } from "@/components/DonationWidget";
 
 export const metadata: Metadata = {
     title: 'Wesprzyj Nas - Wesprzyj nasze działania | RiseGen',
@@ -43,65 +44,29 @@ export default async function SupportPage() {
             <div className="container mx-auto px-4 py-16 max-w-6xl -mt-10 relative z-20">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
 
-                    {/* Donation Card */}
-                    <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 p-8 lg:p-10 animate-in slide-in-from-left duration-700 delay-300">
-                        <div className="flex items-center gap-4 mb-8">
-                            <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl text-indigo-600 dark:text-indigo-400">
-                                <Wallet size={32} />
-                            </div>
-                            <div>
-                                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Dane do przelewu</h2>
-                                <p className="text-gray-500 dark:text-gray-400">Przelew tradycyjny na konto bankowe</p>
-                            </div>
+                    {/* Left Column, Row 1: Online Donation */}
+                    {config?.enableDonations ? (
+                        <div className="animate-in slide-in-from-left duration-700 delay-300">
+                            <DonationWidget />
                         </div>
+                    ) : (
+                        // Placeholder or alternative content if online donations are disabled, 
+                        // or simply empty div to maintain grid structure if needed, 
+                        // but usually it's better to let other items flow or show a message.
+                        // For this specific 2x2 request, if this is missing, the layout might look lopsided.
+                        // Let's show a generic "Support us" text or just render nothing and let the grid handle it.
+                        // Given the request "Po lewej stronie dodaj Wpłać on-line", we'll assume it's enabled.
+                        // If disabled, we might want to pull the bank transfer up?
+                        // For now, I'll render the bank transfer card here too IF donations are disabled, 
+                        // effectively swapping positions? Or just hide it. 
+                        // Let's stick to the requested positions.
+                        <div className="hidden lg:block"></div>
+                    )}
 
-                        <div className="space-y-8">
-                            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-5 border border-gray-100 dark:border-gray-700 transition-colors">
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400">Numer Rachunku</span>
-                                    <CopyButton text={bankAccount.replace(/\s/g, '')} label="Kopiuj numer" />
-                                </div>
-                                <div className="font-mono text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-200 break-all">
-                                    {bankAccount}
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-5 border border-gray-100 dark:border-gray-700 transition-colors">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400">Odbiorca</span>
-                                        <CopyButton text={orgName} />
-                                    </div>
-                                    <div className="font-medium text-gray-900 dark:text-white">
-                                        {orgName}
-                                    </div>
-                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 whitespace-pre-line">
-                                        {orgAddress}
-                                    </div>
-                                </div>
-
-                                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-5 border border-gray-100 dark:border-gray-700 transition-colors">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400">Tytuł przelewu</span>
-                                        <CopyButton text="Darowizna na cele statutowe" />
-                                    </div>
-                                    <div className="font-medium text-gray-900 dark:text-white">
-                                        Darowizna na cele statutowe
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 text-center">
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                Dziękujemy za każdą wpłatę! Jesteśmy organizacją non-profit.
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Info & Tax */}
-                    <div className="space-y-8 lg:pl-10 lg:pt-8 animate-in slide-in-from-right duration-700 delay-500">
-                        <div>
+                    {/* Right Column */}
+                    <div className="flex flex-col gap-8 h-full">
+                        {/* Allocation Info (No block styling) */}
+                        <div className="px-4 lg:px-6 animate-in slide-in-from-right duration-700 delay-400">
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Na co przeznaczamy środki?</h3>
                             <ul className="space-y-6">
                                 <li className="flex gap-4">
@@ -140,41 +105,103 @@ export default async function SupportPage() {
                             </ul>
                         </div>
 
-                        {/* 1.5% Tax Section - Placeholder / Future feature */}
-                        <div className="bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 text-white relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-white/10 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+                        {/* 1.5% Tax Info (Directly below) */}
+                        {config?.showTaxOnePointFive && (
+                            <div className="bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 rounded-3xl p-6 text-white relative overflow-hidden group shadow-xl animate-in slide-in-from-right duration-700 delay-600">
+                                <div className="absolute top-0 right-0 -mr-8 -mt-8 w-48 h-48 bg-white/10 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
 
-                            <h3 className="text-xl font-bold mb-2 relative z-10">Przekaż 1.5% podatku</h3>
-                            <p className="text-gray-300 text-sm mb-6 max-w-md relative z-10">
-                                Podczas rozliczania PIT możesz przekazać 1.5% swojego podatku na rzecz naszej organizacji. To nic Cię nie kosztuje!
-                            </p>
+                                <div className="relative z-10 flex flex-col items-center text-center justify-center gap-4">
+                                    <div>
+                                        <h3 className="text-xl font-bold mb-2">Przekaż 1.5% podatku</h3>
+                                        <p className="text-gray-300 text-sm max-w-sm mx-auto">
+                                            Podczas rozliczania PIT możesz przekazać 1.5% swojego podatku na rzecz naszej organizacji.
+                                        </p>
+                                    </div>
 
-                            {/* Placeholder logic for KRS */}
-                            {false ? (
-                                <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm inline-block border border-white/20">
-                                    <p className="text-xs uppercase tracking-wider text-gray-300 mb-1">Numer KRS</p>
-                                    <p className="text-2xl font-mono font-bold flex items-center gap-3">
-                                        0000000000
-                                        <CopyButton text="0000000000" label="" />
-                                    </p>
+                                    <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+                                        <div className="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/20 text-center flex-1">
+                                            <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">Numer KRS</p>
+                                            <div className="text-2xl font-mono font-bold mb-2">
+                                                {config.taxKrs || "—"}
+                                            </div>
+                                            {config.taxKrs && <CopyButton text={config.taxKrs} label="Kopiuj" />}
+                                        </div>
+
+                                        {config.taxGoal && (
+                                            <div className="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10 text-center flex-1 flex flex-col justify-center">
+                                                <p className="text-[10px] uppercase tracking-wider text-gray-400 mb-1">Cel Szczegółowy</p>
+                                                <p className="font-medium text-white text-sm">{config.taxGoal}</p>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            ) : (
-                                <div className="inline-flex items-center gap-2 text-sm text-gray-400 bg-white/5 px-4 py-2 rounded-lg">
-                                    <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
-                                    Opcja w trakcie konfiguracji
-                                </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
+
+            {/* Bank Transfer Details - Full Width Horizontal Section */}
+            {(config?.showBankTransferDetails ?? true) && (
+                <div className="container mx-auto px-4 pb-16 max-w-6xl relative z-20">
+                    <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 p-8 lg:p-10 animate-in slide-in-from-bottom duration-700 delay-500">
+                        <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-8 border-b border-gray-100 dark:border-gray-800 pb-8">
+                            <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl text-indigo-600 dark:text-indigo-400 shrink-0">
+                                <Wallet size={32} />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Dane do przelewu</h2>
+                                <p className="text-gray-500 dark:text-gray-400">Przelew tradycyjny na konto bankowe</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="lg:col-span-2 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-100 dark:border-gray-700 transition-colors">
+                                <div className="flex justify-between items-start mb-2">
+                                    <span className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400">Numer Rachunku</span>
+                                    <CopyButton text={bankAccount.replace(/\s/g, '')} label="Kopiuj" />
+                                </div>
+                                <div className="font-mono text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-200 break-all">
+                                    {bankAccountFormatted}
+                                </div>
+                            </div>
+
+                            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-100 dark:border-gray-700 transition-colors">
+                                <div className="flex justify-between items-start mb-2">
+                                    <span className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400">Odbiorca</span>
+                                    <CopyButton text={orgName} />
+                                </div>
+                                <div className="font-medium text-gray-900 dark:text-white mb-1">
+                                    {orgName}
+                                </div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 whitespace-pre-line">
+                                    {orgAddress}
+                                </div>
+                            </div>
+
+                            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-100 dark:border-gray-700 transition-colors">
+                                <div className="flex justify-between items-start mb-2">
+                                    <span className="text-xs uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400">Tytuł przelewu</span>
+                                    <CopyButton text="Darowizna na cele statutowe" />
+                                </div>
+                                <div className="font-medium text-gray-900 dark:text-white">
+                                    Darowizna na cele statutowe
+                                </div>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                    Dziękujemy za każdą wpłatę! Jesteśmy organizacją non-profit.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* CTA */}
             <section className="container mx-auto px-4 pb-20 text-center">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Masz pytania dotyczące darowizn?</h3>
                 <div className="flex justify-center gap-4">
-                    <Link href="/kontakt" className="px-8 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm">
-                        Skontaktuj się z nami
+                    <Link href="/kontakt" className="px-8 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition shadow-sm flex items-center gap-2">
+                        Skontaktuj się z nami <ArrowRight className="h-4 w-4" />
                     </Link>
                 </div>
             </section>

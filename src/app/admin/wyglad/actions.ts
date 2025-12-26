@@ -22,11 +22,17 @@ export async function updateCompanyData(prevState: any, formData: FormData) {
     const orgRegon = formData.get("orgRegon") as string;
     const orgBankAccount = formData.get("orgBankAccount") as string;
 
+    const showTaxOnePointFive = formData.get("showTaxOnePointFive") === "on";
+    const enableDonations = formData.get("enableDonations") === "on";
+    const showBankTransferDetails = formData.get("showBankTransferDetails") === "on";
+    const taxKrs = formData.get("taxKrs") as string;
+    const taxGoal = formData.get("taxGoal") as string;
+
     try {
         await prisma.siteConfig.upsert({
             where: { id: "main" },
-            update: { orgName, orgNip, orgRegon, orgBankAccount },
-            create: { id: "main", orgName, orgNip, orgRegon, orgBankAccount },
+            update: { orgName, orgNip, orgRegon, orgBankAccount, showTaxOnePointFive, enableDonations, showBankTransferDetails, taxKrs, taxGoal },
+            create: { id: "main", orgName, orgNip, orgRegon, orgBankAccount, showTaxOnePointFive, enableDonations, showBankTransferDetails, taxKrs, taxGoal },
         });
 
         revalidatePath("/");
@@ -116,6 +122,29 @@ export async function updateHomepageSettings(prevState: any, formData: FormData)
     } catch (error) {
         console.error(error);
         return { success: false, message: "Błąd aktualizacji ustawień." };
+    }
+}
+
+export async function updateSupportPageOrder(prevState: any, formData: FormData) {
+    const session = await getServerSession(authOptions);
+    if (!checkPermission(session)) return { success: false, message: "Brak uprawnień." };
+
+    const supportPageOrder = formData.get("supportPageOrder") as string;
+
+    try {
+        await prisma.siteConfig.upsert({
+            where: { id: "main" },
+            update: { supportPageOrder },
+            create: { id: "main", supportPageOrder },
+        });
+
+        revalidatePath("/");
+        revalidatePath("/wesprzyj-nas");
+        revalidatePath("/admin/wyglad");
+        return { success: true, message: "Układ strony Wesprzyj Nas zaktualizowany." };
+    } catch (error) {
+        console.error("Failed to update support page order:", error);
+        return { success: false, message: "Błąd aktualizacji układu." };
     }
 }
 
@@ -264,27 +293,42 @@ export async function updateEmailConfig(prevState: any, formData: FormData) {
     if (!checkPermission(session)) return { success: false, message: "Brak uprawnień." };
     // This function had 'void' return in catch, inconsistent with others, but let's keep it robust.
 
+    const emailProvider = formData.get("emailProvider") as string;
+    const resendApiKey = formData.get("resendApiKey") as string;
+
+    // SMTP Fields
+    const smtpHost = formData.get("smtpHost") as string;
+    const smtpPort = parseInt(formData.get("smtpPort") as string) || 587;
+    const smtpUser = formData.get("smtpUser") as string;
+    const smtpPassword = formData.get("smtpPassword") as string;
+
     const emailFromContact = formData.get("emailFromContact") as string;
-    const emailFromApplications = formData.get("emailFromApplications") as string; // SENDER
+    const emailFromApplications = formData.get("emailFromApplications") as string;
     const emailFromSupport = formData.get("emailFromSupport") as string;
     const emailFromNewsletter = formData.get("emailFromNewsletter") as string;
 
-    const emailForApplications = formData.get("emailForApplications") as string; // RECIPIENT
-    const emailForContact = formData.get("emailForContact") as string; // RECIPIENT
+    const emailForApplications = formData.get("emailForApplications") as string;
+    const emailForContact = formData.get("emailForContact") as string;
 
     try {
         await prisma.siteConfig.upsert({
             where: { id: "main" },
             update: {
+                emailProvider,
+                resendApiKey,
+                smtpHost, smtpPort, smtpUser, smtpPassword,
                 emailFromContact,
-                emailFromApplications, // Sender
+                emailFromApplications,
                 emailFromSupport,
                 emailFromNewsletter,
-                emailForApplications, // Recipient
+                emailForApplications,
                 emailForContact
             },
             create: {
                 id: "main",
+                emailProvider,
+                resendApiKey,
+                smtpHost, smtpPort, smtpUser, smtpPassword,
                 emailFromContact,
                 emailFromApplications,
                 emailFromSupport,
@@ -307,27 +351,50 @@ const UpdateCodeInjectionSchema = z.object({
     recaptchaSiteKey: z.string().optional().nullable(),
     recaptchaSecretKey: z.string().optional().nullable(),
     recaptchaVersion: z.enum(["v2", "v3", "enterprise"]).optional().nullable(),
-    recaptchaProjectId: z.string().optional().nullable(), // Added
+    recaptchaProjectId: z.string().optional().nullable(),
     googleAnalyticsId: z.string().optional().nullable(),
+    // Discord Integration
+    discordWebhookContactUrl: z.string().url().optional().nullable().or(z.literal("")),
+    discordWebhookApplicationUrl: z.string().url().optional().nullable().or(z.literal("")),
+    // Przelewy24 Integration
+    p24MerchantId: z.string().optional().nullable(),
+    p24PosId: z.string().optional().nullable(),
+    p24ApiKey: z.string().optional().nullable(),
+    p24Crc: z.string().optional().nullable(),
+    p24IsSandbox: z.boolean().optional(),
+    enableDonations: z.boolean().optional(),
 });
 
 export async function updateCodeInjection(prevState: any, formData: FormData) {
     const session = await getServerSession(authOptions);
     if (!checkPermission(session)) return { success: false, message: "Brak uprawnień." };
 
+    const getVal = (key: string) => {
+        const val = formData.get(key) as string;
+        return val && val.trim() !== "" ? val.trim() : null;
+    };
+
     const rawData = {
-        recaptchaSiteKey: formData.get("recaptchaSiteKey") as string | null,
-        recaptchaSecretKey: formData.get("recaptchaSecretKey") as string | null,
-        recaptchaVersion: formData.get("recaptchaVersion") as string | null,
-        recaptchaProjectId: formData.get("recaptchaProjectId") as string | null, // Added
-        googleAnalyticsId: formData.get("googleAnalyticsId") as string | null,
+        recaptchaSiteKey: getVal("recaptchaSiteKey"),
+        recaptchaSecretKey: getVal("recaptchaSecretKey"),
+        recaptchaVersion: formData.get("recaptchaVersion") as string || "v2",
+        recaptchaProjectId: getVal("recaptchaProjectId"),
+        googleAnalyticsId: getVal("googleAnalyticsId"),
+        discordWebhookContactUrl: getVal("discordWebhookContactUrl"),
+        discordWebhookApplicationUrl: getVal("discordWebhookApplicationUrl"),
+        p24MerchantId: getVal("p24MerchantId"),
+        p24PosId: getVal("p24PosId"),
+        p24ApiKey: getVal("p24ApiKey"),
+        p24Crc: getVal("p24Crc"),
+        p24IsSandbox: formData.get("p24IsSandbox") === "on",
+        enableDonations: formData.get("enableDonations") === "on",
     };
 
     const parsed = UpdateCodeInjectionSchema.safeParse(rawData);
 
     if (!parsed.success) {
         console.error("Validation error for updateCodeInjection:", parsed.error);
-        return { success: false, message: "Błąd walidacji danych." };
+        return { success: false, message: "Błąd walidacji danych. Sprawdź poprawność URL." };
     }
 
     const data = parsed.data;
@@ -336,8 +403,16 @@ export async function updateCodeInjection(prevState: any, formData: FormData) {
         recaptchaSiteKey: data.recaptchaSiteKey,
         recaptchaSecretKey: data.recaptchaSecretKey,
         recaptchaVersion: data.recaptchaVersion,
-        recaptchaProjectId: data.recaptchaProjectId, // Added
+        recaptchaProjectId: data.recaptchaProjectId,
         googleAnalyticsId: data.googleAnalyticsId,
+        discordWebhookContactUrl: data.discordWebhookContactUrl,
+        discordWebhookApplicationUrl: data.discordWebhookApplicationUrl,
+        p24MerchantId: data.p24MerchantId,
+        p24PosId: data.p24PosId,
+        p24ApiKey: data.p24ApiKey,
+        p24Crc: data.p24Crc,
+        p24IsSandbox: data.p24IsSandbox,
+        enableDonations: data.enableDonations,
     };
 
     try {
@@ -507,3 +582,5 @@ export async function updateNewsletterSettings(prevState: any, formData: FormDat
         return { success: false, message: "Błąd aktualizacji ustawień newslettera." };
     }
 }
+
+// Deprecated: updateIntegrationsConfig moved to updateCodeInjection

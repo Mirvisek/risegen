@@ -38,27 +38,10 @@ export async function requestPasswordReset(prevState: any, formData: FormData) {
 
         const resetLink = `${process.env.NEXTAUTH_URL || "https://risegen.pl"}/auth/nowe-haslo?token=${token}`;
 
-        // Get Email Config
-        const config = await prisma.siteConfig.findFirst();
-        const apiKey = process.env.RESEND_API_KEY || config?.resendApiKey;
+        // Get Email Config & Send
+        const { sendEmail } = await import("@/lib/mailSender");
 
-        if (!apiKey) {
-            console.error("Missing Resend API Key");
-            return {
-                success: false,
-                message: "Błąd konfiguracji serwera pocztowego. Skontaktuj się z administratorem."
-            };
-        }
-
-        const resend = (await import("resend")).Resend;
-        const client = new resend(apiKey);
-
-        const fromName = config?.siteName || "RiseGen";
-        const fromEmail = config?.emailFromSupport || "pomoc@risegen.pl";
-        const fromHeader = fromEmail.includes("<") ? fromEmail : `"${fromName}" <${fromEmail}>`;
-
-        await client.emails.send({
-            from: fromHeader,
+        await sendEmail({
             to: email,
             subject: "Resetowanie hasła - Panel Admina",
             html: `
@@ -74,6 +57,7 @@ export async function requestPasswordReset(prevState: any, formData: FormData) {
                     <p style="color: #666; font-size: 12px; margin-top: 30px;">Jeśli to nie Ty prosiłeś o reset hasła, zignoruj tę wiadomość.</p>
                 </div>
             `,
+            fromConfigKey: "emailFromSupport"
         });
 
         return {

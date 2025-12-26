@@ -19,7 +19,7 @@ type TeamMember = {
     image: string | null;
     email: string | null;
     phone: string | null;
-    category: string; // Deprecated
+    category?: string; // Deprecated
     order: number;
 };
 

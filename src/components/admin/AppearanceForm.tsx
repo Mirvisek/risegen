@@ -3,7 +3,9 @@
 import { useState, useActionState } from "react";
 import { updateCompanyData, updateSocialMedia, updateContactData, updateHomepageSettings, updateBranding, updateSeoConfig, updateMaintenanceMode, updateNewsletterSettings, updateCodeInjection } from "@/app/admin/wyglad/actions";
 import { AppearanceNavigationForm } from "./AppearanceNavigationForm"; // Added import
-import { Loader2, Check, Upload, MapPin } from "lucide-react";
+
+import { Loader2, Check, Upload, MapPin, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 interface Props {
@@ -56,12 +58,25 @@ interface Props {
         dripDay2Content?: string | null;
         dripDay5Delay?: number | null;
         dripDay5Subject?: string | null;
-        dripDay5Content?: string | null;
-        // Integrations
+        showTaxOnePointFive?: boolean;
+        enableDonations?: boolean;
+        showBankTransferDetails?: boolean;
+        taxKrs?: string | null;
+        taxGoal?: string | null;
+        p24IsSandbox?: boolean;
+        p24MerchantId?: string | null;
+        p24PosId?: string | null;
+        p24ApiKey?: string | null;
+        p24Crc?: string | null;
+        recaptchaVersion?: string | null;
         recaptchaSiteKey?: string | null;
         recaptchaSecretKey?: string | null;
-        recaptchaVersion?: string | null;
+        recaptchaProjectId?: string | null;
         googleAnalyticsId?: string | null;
+        discordWebhookContactUrl?: string | null;
+        discordWebhookApplicationUrl?: string | null;
+        dripDay5Content?: string | null;
+
     } | null;
 }
 
@@ -220,6 +235,66 @@ export function CompanyForm({ config }: Props) {
                     <label htmlFor="orgBankAccount" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Numer Konta Bankowego</label>
                     <div className="mt-1">
                         <input type="text" name="orgBankAccount" id="orgBankAccount" defaultValue={config?.orgBankAccount || ""} className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors" placeholder="00 0000 0000 0000 0000 0000 0000" />
+                    </div>
+                </div>
+
+                <div className="sm:col-span-6 border-t border-gray-100 dark:border-gray-800 pt-6 mt-2">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Ustawienia Finansowe</h4>
+
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                            <input
+                                type="checkbox"
+                                name="showBankTransferDetails"
+                                id="showBankTransferDetails"
+                                defaultChecked={config?.showBankTransferDetails ?? true}
+                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-700 dark:bg-gray-800"
+                            />
+                            <label htmlFor="showBankTransferDetails" className="text-sm text-gray-700 dark:text-gray-300 select-none cursor-pointer">
+                                Pokaż sekcję &quot;Dane do przelewu&quot;
+                            </label>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <input
+                                type="checkbox"
+                                name="showTaxOnePointFive"
+                                id="showTaxOnePointFive"
+                                defaultChecked={config?.showTaxOnePointFive}
+                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-700 dark:bg-gray-800"
+                            />
+                            <label htmlFor="showTaxOnePointFive" className="text-sm text-gray-700 dark:text-gray-300 select-none cursor-pointer">
+                                Pokaż sekcję &quot;Przekaż 1.5% podatku&quot;
+                            </label>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <input
+                                type="checkbox"
+                                name="enableDonations"
+                                id="enableDonations"
+                                defaultChecked={config?.enableDonations}
+                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-700 dark:bg-gray-800"
+                            />
+                            <label htmlFor="enableDonations" className="text-sm text-gray-700 dark:text-gray-300 select-none cursor-pointer">
+                                Włącz wpłaty on-line (Wymaga konfiguracji Przelewy24 w sekcji Integracje)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2 mt-6">
+                        <div className="sm:col-span-1">
+                            <label htmlFor="taxKrs" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Numer KRS (Dla 1.5%)</label>
+                            <div className="mt-1">
+                                <input type="text" name="taxKrs" id="taxKrs" defaultValue={config?.taxKrs || ""} className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors" placeholder="0000000000" />
+                            </div>
+                        </div>
+                        <div className="sm:col-span-1">
+                            <label htmlFor="taxGoal" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Cel Szczegółowy (Opcjonalnie)</label>
+                            <div className="mt-1">
+                                <input type="text" name="taxGoal" id="taxGoal" defaultValue={config?.taxGoal || ""} className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors" placeholder="Np. Cele Statutowe" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -895,6 +970,12 @@ export function NewsletterSettingsForm({ config }: Props) {
 export function CodeInjectionForm({ config }: Props) {
     const [state, formAction, isPending] = useActionState(updateCodeInjection, initialState);
 
+    // Controlled Inputs
+    const [recaptchaSiteKey, setRecaptchaSiteKey] = useState(config?.recaptchaSiteKey || "");
+    const [recaptchaSecretKey, setRecaptchaSecretKey] = useState(config?.recaptchaSecretKey || "");
+    const [gatId, setGatId] = useState(config?.googleAnalyticsId || "");
+
+
     return (
         <form action={formAction} className="bg-white dark:bg-gray-900 shadow sm:rounded-lg p-6 space-y-6 border border-gray-100 dark:border-gray-800 transition-colors">
             <div className="flex items-center gap-3 border-b dark:border-gray-800 pb-2">
@@ -914,11 +995,61 @@ export function CodeInjectionForm({ config }: Props) {
                         </div>
                         <div>
                             <label htmlFor="recaptchaSiteKey" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Site Key (Klucz Strony)</label>
-                            <input type="text" name="recaptchaSiteKey" id="recaptchaSiteKey" defaultValue={config?.recaptchaSiteKey || ""} placeholder="6L..." className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors font-mono" />
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    name="recaptchaSiteKey"
+                                    id="recaptchaSiteKey"
+                                    value={recaptchaSiteKey}
+                                    onChange={(e) => setRecaptchaSiteKey(e.target.value)}
+                                    placeholder="6L..."
+                                    className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors font-mono"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setRecaptchaSiteKey("")}
+                                    disabled={!recaptchaSiteKey}
+                                    className={cn(
+                                        "flex items-center gap-2 px-3 py-2 rounded-md transition-colors border shadow-sm",
+                                        recaptchaSiteKey
+                                            ? "bg-red-50 text-red-700 border-red-200 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-900/40"
+                                            : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-gray-800 dark:text-gray-600 dark:border-gray-700"
+                                    )}
+                                    title="Usuń klucz"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                    <span className="text-sm font-medium">Usuń</span>
+                                </button>
+                            </div>
                         </div>
                         <div>
                             <label htmlFor="recaptchaSecretKey" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Secret Key (Klucz Sekretny)</label>
-                            <input type="password" name="recaptchaSecretKey" id="recaptchaSecretKey" defaultValue={config?.recaptchaSecretKey || ""} placeholder="6L..." className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors font-mono" />
+                            <div className="flex gap-2">
+                                <input
+                                    type="password"
+                                    name="recaptchaSecretKey"
+                                    id="recaptchaSecretKey"
+                                    value={recaptchaSecretKey}
+                                    onChange={(e) => setRecaptchaSecretKey(e.target.value)}
+                                    placeholder="6L..."
+                                    className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors font-mono"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setRecaptchaSecretKey("")}
+                                    disabled={!recaptchaSecretKey}
+                                    className={cn(
+                                        "flex items-center gap-2 px-3 py-2 rounded-md transition-colors border shadow-sm",
+                                        recaptchaSecretKey
+                                            ? "bg-red-50 text-red-700 border-red-200 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-900/40"
+                                            : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-gray-800 dark:text-gray-600 dark:border-gray-700"
+                                    )}
+                                    title="Usuń klucz"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                    <span className="text-sm font-medium">Usuń</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 text-sm">
@@ -939,7 +1070,32 @@ export function CodeInjectionForm({ config }: Props) {
                     <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-4">Google Analytics</h4>
                     <div>
                         <label htmlFor="googleAnalyticsId" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ID Śledzenia (Measurement ID)</label>
-                        <input type="text" name="googleAnalyticsId" id="googleAnalyticsId" defaultValue={config?.googleAnalyticsId || ""} placeholder="G-XXXXXXXXXX" className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors font-mono" />
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                name="googleAnalyticsId"
+                                id="googleAnalyticsId"
+                                value={gatId}
+                                onChange={(e) => setGatId(e.target.value)}
+                                placeholder="G-XXXXXXXXXX"
+                                className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors font-mono"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setGatId("")}
+                                disabled={!gatId}
+                                className={cn(
+                                    "flex items-center gap-2 px-3 py-2 rounded-md transition-colors border shadow-sm",
+                                    gatId
+                                        ? "bg-red-50 text-red-700 border-red-200 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-900/40"
+                                        : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed dark:bg-gray-800 dark:text-gray-600 dark:border-gray-700"
+                                )}
+                                title="Usuń klucz"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                                <span className="text-sm font-medium">Usuń</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -954,6 +1110,7 @@ export function AppearanceForm({ config }: Props) {
         <div className="space-y-8 animate-in fade-in duration-500">
             <MaintenanceModeForm config={config} />
             <NewsletterSettingsForm config={config} />
+
             <HomepageSettingsForm config={config} />
             <AppearanceNavigationForm config={config} />
             <CodeInjectionForm config={config} />

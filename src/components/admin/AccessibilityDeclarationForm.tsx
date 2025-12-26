@@ -13,8 +13,10 @@ const MDEditor = dynamic(
     { ssr: false }
 );
 
+import { SiteConfig } from "@prisma/client";
+
 interface Props {
-    config: any;
+    config: SiteConfig | null;
 }
 
 export function AccessibilityDeclarationForm({ config }: Props) {

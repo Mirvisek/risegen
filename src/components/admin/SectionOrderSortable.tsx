@@ -7,9 +7,10 @@ import { GripVertical } from "lucide-react";
 interface Props {
     initialOrder: string;
     onOrderChange: (newOrder: string) => void;
+    labels?: Record<string, string>;
 }
 
-const SECTION_LABELS: Record<string, string> = {
+const DEFAULT_LABELS: Record<string, string> = {
     hero: "Sekcja Hero (Baner)",
     stats: "Licznik Sukcesów",
     action: "Centrum Akcji",
@@ -19,12 +20,12 @@ const SECTION_LABELS: Record<string, string> = {
     partners: "Partnerzy",
 };
 
-export function SectionOrderSortable({ initialOrder, onOrderChange }: Props) {
+export function SectionOrderSortable({ initialOrder, onOrderChange, labels = DEFAULT_LABELS }: Props) {
     const [items, setItems] = useState(
         initialOrder
             .split(",")
-            .filter((id) => SECTION_LABELS[id]) // Filter out unknown IDs
-            .map((id) => ({ id, label: SECTION_LABELS[id] }))
+            .filter((id) => labels[id]) // Filter out unknown IDs
+            .map((id) => ({ id, label: labels[id] }))
     );
 
     const handleDragEnd = (result: any) => {

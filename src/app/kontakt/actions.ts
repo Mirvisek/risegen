@@ -45,47 +45,44 @@ export async function sendContactMessage(prevState: any, formData: FormData) {
             },
         });
 
-        // Send email via Resend
+        // Send Discord Notification
+        try {
+            const { sendDiscordNotification, DISCORD_COLORS } = await import("@/lib/discord");
+            await sendDiscordNotification({
+                title: `📩 Nowa wiadomość: ${subject || "Brak tematu"}`,
+                description: message.length > 200 ? message.substring(0, 200) + "..." : message,
+                color: DISCORD_COLORS.BLUE,
+                fields: [
+                    { name: "Nadawca", value: `${name} (${email})`, inline: true },
+                    { name: "ID", value: `#${nextNumber}`, inline: true }
+                ],
+                url: `${process.env.NEXTAUTH_URL}/admin/kontakt`
+            });
+        } catch (e) { console.error("Discord error:", e); }
+
+        // Send email via mailSender (Resend/SMTP)
         const config = await prisma.siteConfig.findUnique({ where: { id: "main" } });
-        const apiKey = process.env.RESEND_API_KEY || config?.resendApiKey;
+        const toEmail = config?.emailForContact || config?.email || "kontakt@risegen.pl";
 
-        if (apiKey) {
-            try {
-                const resend = (await import("resend")).Resend;
-                const client = new resend(apiKey);
-
-                const fromName = "Kontakt RiseGen";
-                const fromEmail = config?.emailFromContact || "kontakt@risegen.pl";
-                // Ensure proper header format
-                const fromHeader = fromEmail.includes("<") ? fromEmail : `"${fromName}" <${fromEmail}>`;
-
-                const toEmail = config?.emailForContact || config?.email || "kontakt@risegen.pl"; // Odbiorca (Admin)
-
-                await client.emails.send({
-                    from: fromHeader,
-                    to: toEmail,
-                    replyTo: email, // Odpowiedz do użytkownika
-                    subject: `[Formularz Kontaktowy] ${subject || "Nowa wiadomość"} (#${nextNumber})`,
-                    html: `
-                        <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
-                            <h2 style="color: #4F46E5;">Nowa wiadomość z formularza kontaktowego</h2>
-                            <p><strong>Numer:</strong> #${nextNumber}</p>
-                            <p><strong>Nadawca:</strong> ${name} (<a href="mailto:${email}">${email}</a>)</p>
-                            <p><strong>Temat:</strong> ${subject}</p>
-                            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
-                            <div style="background: #f9f9f9; padding: 15px; border-radius: 5px;">
-                                <p style="margin-top: 0; white-space: pre-wrap;">${message}</p>
-                            </div>
-                            <p style="color: #888; font-size: 12px; margin-top: 20px;">Wiadomość wysłana ze strony internetowej.</p>
-                        </div>
-                    `,
-                });
-            } catch (emailError) {
-                console.error("Failed to send email notification:", emailError);
-            }
-        } else {
-            console.warn("Missing Resend API Key - email not sent.");
-        }
+        const { sendEmail } = await import("@/lib/mailSender");
+        await sendEmail({
+            to: toEmail,
+            subject: `[Formularz Kontaktowy] ${subject || "Nowa wiadomość"} (#${nextNumber})`,
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee;">
+                    <h2 style="color: #4F46E5;">Nowa wiadomość z formularza kontaktowego</h2>
+                    <p><strong>Numer:</strong> #${nextNumber}</p>
+                    <p><strong>Nadawca:</strong> ${name} (<a href="mailto:${email}">${email}</a>)</p>
+                    <p><strong>Temat:</strong> ${subject}</p>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 5px;">
+                        <p style="margin-top: 0; white-space: pre-wrap;">${message}</p>
+                    </div>
+                </div>
+            `,
+            fromConfigKey: "emailFromContact",
+            replyTo: email
+        });
 
         return { success: true, message: "Wiadomość została wysłana! Dziękujemy za kontakt." };
     } catch (error) {

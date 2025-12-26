@@ -113,7 +113,8 @@ model SiteConfig {
   aboutUsText          String?
   aboutUsGoals         String?
   aboutUsJoinText      String?
-  // Email Configuration (Resend)
+  // Email Configuration
+  emailProvider        String   @default("smtp") // "smtp" or "resend"
   resendApiKey         String?
   emailFromContact     String?  @default("kontakt@risegen.pl")
   emailFromApplications String? @default("rekrutacja@risegen.pl")
@@ -128,6 +129,24 @@ model SiteConfig {
   smtpFrom             String?  // Global fallback
   emailForApplications String?  // Where to SEND notifications TO
   emailForContact      String?  // Where to SEND contact msgs TO
+
+  // Integrations - Discord
+  discordWebhookContactUrl       String? // Wiadomości z formularza kontaktowego
+  discordWebhookApplicationUrl   String? // Zgłoszenia (Rekrutacja)
+
+  // Integrations - Przelewy24 (Donations)
+  enableDonations      Boolean  @default(false)
+  p24MerchantId        String?
+  p24PosId             String?
+  p24ApiKey            String?
+  p24Crc               String?
+  p24IsSandbox         Boolean  @default(false)
+  showBankTransferDetails Boolean @default(true)
+
+  // 1.5% Tax Settings
+  showTaxOnePointFive  Boolean  @default(false)
+  taxKrs               String?
+  taxGoal              String?
 
   // SEO & Scripts
   seoTitle             String?
@@ -175,6 +194,7 @@ model SiteConfig {
   showUpcomingEvents Boolean  @default(true)
   showActionCenter   Boolean  @default(true)
   homepageOrder      String   @default("hero,stats,action,news,events,projects,partners")
+  supportPageOrder   String   @default("hero,bank_transfer,online_payment,info_tiles,tax_15,contact_cta")
   contactMapUrl      String?
   contactMapPin      String?
 }
@@ -280,4 +300,17 @@ model HomeHeroSlide {
   order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Donation {
+  id           String   @id @default(cuid())
+  amount       Int      // In grosze
+  currency     String   @default("PLN")
+  description  String
+  email        String
+  status       String   @default("PENDING") // PENDING, COMPLETED, FAILED
+  sessionId    String   @unique // P24 Session ID
+  orderId      Int?     // P24 Order ID
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

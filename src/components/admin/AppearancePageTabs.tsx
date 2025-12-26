@@ -15,6 +15,9 @@ import {
     NewsletterSettingsForm
 } from "@/components/admin/AppearanceForm";
 import { AppearanceNavigationForm } from "@/components/admin/AppearanceNavigationForm";
+import { SiteConfig, Partner, HomeHeroSlide, TeamMember, Document as PrismaDocument } from "@prisma/client";
+
+
 import { PartnersList } from "@/components/admin/PartnersList";
 import { AboutTextForm } from "@/components/admin/AboutTextForm";
 import { HomeSliderManager } from "@/components/admin/HomeSliderManager";
@@ -31,7 +34,6 @@ import {
     Palette,
     ShieldCheck,
     Terminal,
-    Globe,
     Layout,
     Image as ImageIcon,
     Users,
@@ -49,11 +51,11 @@ import {
 } from "lucide-react";
 
 interface AppearancePageTabsProps {
-    config: any;
-    partners: any[];
-    slides: any[];
-    members: any[];
-    documents: any[];
+    config: SiteConfig | null;
+    partners: Partner[];
+    slides: HomeHeroSlide[];
+    members: TeamMember[];
+    documents: PrismaDocument[];
 }
 
 type MainTab = "general" | "appearance" | "policies" | "config";
@@ -92,7 +94,7 @@ export function AppearancePageTabs({ config, partners, slides, members, document
             { id: "policies-accessibility", label: "Deklaracja dostępności", icon: Eye },
         ],
         config: [
-            { id: "config-newsletter", label: "Newsletter", icon: Newspaper }, // NEW: Added here
+            { id: "config-newsletter", label: "Newsletter", icon: Newspaper },
             { id: "config-seo", label: "Ustawienia SEO", icon: Search },
             { id: "config-email", label: "Konfiguracja E-Mail", icon: Mail },
             { id: "config-codes", label: "Kody / integracje", icon: Code },
@@ -195,10 +197,12 @@ export function AppearancePageTabs({ config, partners, slides, members, document
                         {activeSubTab === "policies-accessibility" && <AccessibilityDeclarationForm config={config} />}
 
                         {/* Konfiguracja Content */}
-                        {activeSubTab === "config-newsletter" && <NewsletterSettingsForm config={config} />} {/* NEW: Added here */}
+                        {activeSubTab === "config-newsletter" && <NewsletterSettingsForm config={config} />}
                         {activeSubTab === "config-seo" && <SeoForm config={config} />}
                         {activeSubTab === "config-email" && <EmailConfigForm config={config} />}
-                        {activeSubTab === "config-codes" && <CodeInjectionForm config={config} />}
+                        {activeSubTab === "config-codes" && (
+                            <CodeInjectionForm config={config} />
+                        )}
                         {activeSubTab === "config-calendar" && (
                             <CalendarForm config={config} />
                         )}

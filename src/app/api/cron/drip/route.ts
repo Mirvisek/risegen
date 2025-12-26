@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Resend } from "resend";
+import { sendEmail } from "@/lib/mailSender";
 
 export async function POST(req: Request) {
     try {
@@ -23,16 +23,6 @@ export async function POST(req: Request) {
             }
         }
 
-        const apiKey = process.env.RESEND_API_KEY || config.resendApiKey;
-        if (!apiKey) {
-            return NextResponse.json({ error: "Missing Resend API Key" }, { status: 500 });
-        }
-        const resend = new Resend(apiKey);
-
-        const fromName = config.siteName || "RiseGen";
-        const fromEmail = config.emailFromNewsletter || "newsletter@risegen.pl";
-        const fromHeader = fromEmail.includes("<") ? fromEmail : `${fromName} <${fromEmail}>`;
-
         // 3. Process Step 1 -> Step 2 (Day 2 Email)
         // Find subscribers who are at step 0 AND createdAt is older than dripDay2Delay days
         const delayMsDay2 = config.dripDay2Delay * 24 * 60 * 60 * 1000;
@@ -50,8 +40,7 @@ export async function POST(req: Request) {
         let sentDay2 = 0;
         for (const sub of subscribersForDay2) {
             try {
-                await resend.emails.send({
-                    from: fromHeader,
+                await sendEmail({
                     to: sub.email,
                     subject: config.dripDay2Subject || "Poznaj nasze największe sukcesy! 🌟",
                     html: `
@@ -70,7 +59,8 @@ export async function POST(req: Request) {
                             <br/>
                             <p style="color: #666; font-size: 14px;">– Zespół RiseGen</p>
                         </div>
-                    `
+                    `,
+                    fromConfigKey: "emailFromNewsletter"
                 });
                 // Advance step
                 await prisma.subscriber.update({ where: { id: sub.id }, data: { dripStep: 1 } });
@@ -97,8 +87,7 @@ export async function POST(req: Request) {
         let sentDay5 = 0;
         for (const sub of subscribersForDay5) {
             try {
-                await resend.emails.send({
-                    from: fromHeader,
+                await sendEmail({
                     to: sub.email,
                     subject: config.dripDay5Subject || "Chcesz dołączyć do działania? 🤝",
                     html: `
@@ -114,7 +103,8 @@ export async function POST(req: Request) {
                             <br/>
                             <p style="color: #666; font-size: 14px;">– Zespół RiseGen</p>
                         </div>
-                    `
+                    `,
+                    fromConfigKey: "emailFromNewsletter"
                 });
                 // Advance step
                 await prisma.subscriber.update({ where: { id: sub.id }, data: { dripStep: 2 } });

@@ -25,8 +25,19 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
 
     if (!event) notFound();
 
-    const images = JSON.parse(event.images);
-    const documents = JSON.parse(event.documents);
+    let images = [];
+    try {
+        images = JSON.parse(event.images);
+    } catch (e) {
+        console.error("Failed to parse event images", e);
+    }
+
+    let documents = [];
+    try {
+        documents = JSON.parse(event.documents);
+    } catch (e) {
+        console.error("Failed to parse event documents", e);
+    }
 
     return (
         <div className="bg-white dark:bg-gray-950 transition-colors duration-300 min-h-screen">

@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { updateEmailConfig } from "@/app/admin/wyglad/actions";
-import { Loader2, Save, Mail, ShieldAlert } from "lucide-react";
+import { Loader2, Save, Mail, ShieldAlert, Server } from "lucide-react";
 
 interface Props {
     config: any;
@@ -10,6 +10,7 @@ interface Props {
 
 export function EmailConfigForm({ config }: Props) {
     const [state, formAction, isPending] = useActionState(updateEmailConfig, null);
+    const [provider, setProvider] = useState<string>(config?.emailProvider || "smtp");
 
     return (
         <form action={formAction} className="space-y-8 max-w-4xl bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors">
@@ -22,12 +23,110 @@ export function EmailConfigForm({ config }: Props) {
 
             <div className="border-b dark:border-gray-700 pb-4 mb-4">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
+                    <Server className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                    Wybór Dostawcy Poczty
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Wybierz, w jaki sposób system ma wysyłać wiadomości email.
+                </p>
+            </div>
+
+            <div className="mb-8">
+                <label htmlFor="emailProvider" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Dostawca Usług Email
+                </label>
+                <select
+                    name="emailProvider"
+                    id="emailProvider"
+                    value={provider}
+                    onChange={(e) => setProvider(e.target.value)}
+                    className="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border transition-colors"
+                >
+                    <option value="smtp">Tradycyjne SMTP (Hosting, Brevo, SendGrid, Gmail)</option>
+                    <option value="resend">Resend API (Dla Programistów)</option>
+                </select>
+            </div>
+
+            {provider === "resend" && (
+                <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-800">
+                    <label htmlFor="resendApiKey" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Resend API Key (Klucz API)
+                    </label>
+                    <input
+                        type="password"
+                        name="resendApiKey"
+                        id="resendApiKey"
+                        defaultValue={config?.resendApiKey || ""}
+                        placeholder="re_1234..."
+                        className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors font-mono"
+                    />
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Klucz API ze strony <a href="https://resend.com/api-keys" target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">Resend.com</a>.
+                    </p>
+                </div>
+            )}
+
+            {provider === "smtp" && (
+                <div className="mb-6 space-y-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-800">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label htmlFor="smtpHost" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Host SMTP</label>
+                            <input
+                                type="text"
+                                name="smtpHost"
+                                id="smtpHost"
+                                defaultValue={config?.smtpHost || ""}
+                                placeholder="smtp.example.com"
+                                className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="smtpPort" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Port SMTP</label>
+                            <input
+                                type="number"
+                                name="smtpPort"
+                                id="smtpPort"
+                                defaultValue={config?.smtpPort || "587"}
+                                placeholder="587 lub 465"
+                                className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="smtpUser" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Użytkownik SMTP</label>
+                            <input
+                                type="text"
+                                name="smtpUser"
+                                id="smtpUser"
+                                defaultValue={config?.smtpUser || ""}
+                                placeholder="user@example.com"
+                                className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="smtpPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hasło SMTP</label>
+                            <input
+                                type="password"
+                                name="smtpPassword"
+                                id="smtpPassword"
+                                defaultValue={config?.smtpPassword || ""}
+                                placeholder="••••••••"
+                                className="block w-full rounded-md border-gray-300 dark:border-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors"
+                            />
+                        </div>
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        Dla portu 465 używane jest SSL (Secure), dla 587 zazwyczaj TLS.
+                    </p>
+                </div>
+            )}
+
+            <div className="border-b dark:border-gray-700 pb-4 mb-4 mt-8">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
                     <Mail className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                    Konfiguracja Nadawców (Resend)
+                    Konfiguracja Nadawców
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                     Skonfiguruj adresy email, z których będą wysyłane wiadomości systemowe.
-                    Wszystkie adresy muszą należeć do domeny zweryfikowanej w Resend (np. <strong>@risegen.pl</strong>).
                 </p>
             </div>
 
