@@ -5,7 +5,7 @@ import { ArrowRight, Heart, Users, Handshake } from "lucide-react";
 
 export function ActionCenter() {
     return (
-        <section className="container mx-auto px-4 max-w-6xl py-8 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-200">
+        <section className="hidden md:block container mx-auto px-4 max-w-6xl py-8 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-200">
             <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 p-8 md:p-12 space-y-12">
                 <div className="text-center space-y-4">
                     <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Centrum Akcji</h2>
